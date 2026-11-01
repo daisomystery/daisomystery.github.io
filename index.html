@@ -421,7 +421,8 @@ dialog.detail .card { max-height: calc(100vh - 48px); overflow-y: auto }
 const CONFIG = {
   ACCOUNT: "@daiso_mysterylover",
   SITE_URL: "",              // 公開URL（ストーリーズ画像の下に小さく入る。空なら入れない）
-  AMAZON_TAG: "daisomystery-22",            // AmazonアソシエイトのトラッキングID（例：xxxxx-22）
+  AMAZON_TAG: "daisomystery-22",
+  RAKUTEN_ID: "5909e664.4576553d.5909e665.30d89bf6", // 楽天アフィリエイトID（詳細画面に「楽天ブックスで見る」を出す）            // AmazonアソシエイトのトラッキングID（例：xxxxx-22）
   GAS_URL: "https://script.google.com/macros/s/AKfycbztgNqgZvAvNM5SvMqqNHAt8tGh13-sz-6KymRPvbjYckOkm7HGMhoaLZyp4DKIoPvZ/exec",               // 集計用 Google Apps Script のウェブアプリURL
   USE_AMAZON_IMAGES: false,   // trueでAmazonの書影を表示（アソシエイト承認後に推奨）
   EXCLUDE: [],               // 診断の対象から外す作品の題名
@@ -759,7 +760,7 @@ function ledger() {
 }
 function footer() {
   return `<footer class="foot">
-    <p>当サイトはAmazonのアソシエイトとして、適格販売により収入を得ています。購入ボタンには広告（PR）リンクを含みます。</p>
+    <p>当サイトはAmazonのアソシエイトとして、適格販売により収入を得ています。また、楽天アフィリエイトに参加しています。購入ボタンには広告（PR）リンクを含みます。</p>
     <p>おすすめは ${esc(CONFIG.ACCOUNT)} の読了本から選んでいます。あらすじにネタバレは含みません。</p>
     <details class="about"><summary>このサイトについて</summary>
       <p>謎本診断は、ミステリー紹介アカウント ${esc(CONFIG.ACCOUNT)} が運営しています。</p>
@@ -768,14 +769,21 @@ function footer() {
       <p>お問い合わせは Instagram（${esc(CONFIG.ACCOUNT)}）のDMまでお願いします。</p>
     </details></footer>`;
 }
+function rakutenUrl(b) {
+  const target = `https://books.rakuten.co.jp/search?sitem=${encodeURIComponent((b.t + " " + (b.a || "")).trim())}&g=001`;
+  const e = encodeURIComponent(target);
+  return `https://hb.afl.rakuten.co.jp/hgc/${CONFIG.RAKUTEN_ID}/?pc=${e}&m=${e}`;
+}
 function buyLinks(b, force) {
   const tag = CONFIG.AMAZON_TAG ? `?tag=${encodeURIComponent(CONFIG.AMAZON_TAG)}` : "";
   const amz = `https://www.amazon.co.jp/dp/${b.asin}${tag}`;
   const wantAud = force || b.aud;
   const aud = `https://www.amazon.co.jp/s?k=${encodeURIComponent(b.t + " " + b.a)}&i=audible${CONFIG.AMAZON_TAG ? "&tag=" + encodeURIComponent(CONFIG.AMAZON_TAG) : ""}`;
-  if (!b.asin) return "";
+  const rak = force && CONFIG.RAKUTEN_ID; // 楽天は詳細画面だけ
+  if (!b.asin && !rak) return "";
   return `<div class="buy">
-    <a class="btn" href="${amz}" target="_blank" rel="noopener sponsored" data-click="amazon" data-id="${b.id}">Amazonで見る</a>
+    ${b.asin ? `<a class="btn" href="${amz}" target="_blank" rel="noopener sponsored" data-click="amazon" data-id="${b.id}">Amazonで見る</a>` : ""}
+    ${rak ? `<a class="btn ghost" href="${rakutenUrl(b)}" target="_blank" rel="noopener sponsored" data-click="rakuten" data-id="${b.id}">楽天ブックスで見る</a>` : ""}
     ${wantAud && b.aud ? `<a class="btn ghost" href="${aud}" target="_blank" rel="noopener sponsored" data-click="audible" data-id="${b.id}">Audibleで聴く</a>` : ""}
     <span class="pr">PR</span></div>`;
 }
