@@ -782,7 +782,7 @@ function buyLinks(b, force) {
   const amz = `https://www.amazon.co.jp/dp/${b.asin}${tag}`;
   const wantAud = force || b.aud;
   const aud = `https://www.amazon.co.jp/s?k=${encodeURIComponent(b.t + " " + b.a)}&i=audible${CONFIG.AMAZON_TAG ? "&tag=" + encodeURIComponent(CONFIG.AMAZON_TAG) : ""}`;
-  const rak = force && CONFIG.RAKUTEN_ID; // 楽天は詳細画面だけ
+  const rak = !!CONFIG.RAKUTEN_ID;
   if (!b.asin && !rak) return "";
   return `<div class="buy">
     ${b.asin ? `<a class="btn" href="${amz}" target="_blank" rel="noopener sponsored" data-click="amazon" data-id="${b.id}">Amazonで見る</a>` : ""}
@@ -1578,6 +1578,18 @@ function openDetail(id) {
 document.getElementById("detail").addEventListener("click", e => { if (e.target.id === "detail") e.target.close() });
 
 /* ===== ストーリーズ用の画像（1080×1920） ===== */
+// 書影を画像に描くには同じ出所のデータが必要なので、Apps Script にデータURLで取ってきてもらう（8秒で諦めて革装にする）
+async function loadCover(b) {
+  const m = (b.img || "").match(/cabinet\/([^?]+)/);
+  if (!m || !CONFIG.GAS_URL) return null;
+  try {
+    const ctl = new AbortController(); const tm = setTimeout(() => ctl.abort(), 8000);
+    const j = await fetch(`${CONFIG.GAS_URL}?mode=cover&p=${encodeURIComponent(m[1])}`, { signal: ctl.signal }).then(r => r.json());
+    clearTimeout(tm);
+    if (!j || !j.d) return null;
+    return await new Promise(res => { const im = new Image(); im.onload = () => res(im.width > 10 ? im : null); im.onerror = () => res(null); im.src = j.d });
+  } catch (e) { return null }
+}
 async function makeStory(recs, wish) {
   const W = 1080, H = 1920, c = document.createElement("canvas"); c.width = W; c.height = H;
   const g = c.getContext("2d");
@@ -1617,15 +1629,22 @@ async function makeStory(recs, wish) {
   }
   g.strokeStyle = brass; g.lineWidth = 2; g.beginPath(); g.moveTo(W / 2 - 60, y + 20); g.lineTo(W / 2 + 60, y + 20); g.stroke();
   spaced("おすすめの3冊", 900, `800 42px ${MIN}`, cream, 6);
-  // 本（革装の表紙を描く）
+  // 本：書影（楽天ブックス、集計用のApps Script経由で取得）があれば描き、なければ革装の表紙を描く
   const leathers = ["#5b1f24", "#1f3b2c", "#1f2a44", "#6a4a23", "#2a2420", "#47294a", "#6b3a20"];
+  const covers = await Promise.all(recs.map(r => loadCover(r.b)));
   recs.forEach((r, i) => {
-    const b = r.b, y = 950 + i * 240, x0 = 150;
-    g.fillStyle = leathers[hash(b.id) % 7]; g.fillRect(x0, y, 140, 210);
-    g.fillStyle = "rgba(0,0,0,.3)"; g.fillRect(x0, y, 10, 210);
-    g.strokeStyle = "rgba(216,180,106,.6)"; g.lineWidth = 2; g.strokeRect(x0 + 18, y + 12, 110, 186);
-    g.fillStyle = "#d8b46a"; g.font = `800 22px ${MIN}`; g.textAlign = "center";
-    [...b.t.slice(0, 7)].forEach((ch, k) => g.fillText(ch, x0 + 86, y + 44 + k * 24));
+    const b = r.b, y = 950 + i * 240, x0 = 150, im = covers[i];
+    if (im) {
+      const s = Math.min(140 / im.width, 210 / im.height), w = im.width * s, h = im.height * s;
+      g.fillStyle = "rgba(0,0,0,.45)"; g.fillRect(x0 + (140 - w) / 2 + 6, y + (210 - h) / 2 + 8, w, h);
+      g.drawImage(im, x0 + (140 - w) / 2, y + (210 - h) / 2, w, h);
+    } else {
+      g.fillStyle = leathers[hash(b.id) % 7]; g.fillRect(x0, y, 140, 210);
+      g.fillStyle = "rgba(0,0,0,.3)"; g.fillRect(x0, y, 10, 210);
+      g.strokeStyle = "rgba(216,180,106,.6)"; g.lineWidth = 2; g.strokeRect(x0 + 18, y + 12, 110, 186);
+      g.fillStyle = "#d8b46a"; g.font = `800 22px ${MIN}`; g.textAlign = "center";
+      [...b.t.slice(0, 7)].forEach((ch, k) => g.fillText(ch, x0 + 86, y + 44 + k * 24));
+    }
     g.textAlign = "left";
     g.fillStyle = brass; g.font = `500 30px ${CAPS}`; g.fillText(`No.${i + 1}`, x0 + 180, y + 50);
     // 題名（2行まで）
@@ -1657,8 +1676,15 @@ async function openStory(recs, wish) {
   const canShare = file && navigator.canShare && navigator.canShare({ files: [file] });
   dlg.querySelector(".card-body").innerHTML = `
     <img class="story" src="${url}" alt="診断結果のストーリーズ用画像：おすすめ3冊">
-    <p class="hint">画像を長押し（パソコンは右クリック）して保存し、ストーリーズで ${esc(CONFIG.ACCOUNT)} をメンションしてシェアしてください。</p>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">${canShare ? `<button class="btn seal" id="doShare">共有する</button>` : ""}<a class="btn ghost" id="dl" href="${url}" download="nazobon.png">画像を保存</a></div>`;
+    <div style="display:flex;gap:8px;flex-wrap:wrap">${canShare
+      ? `<button class="btn seal" id="doSave">写真に保存</button><button class="btn ghost" id="doShare">共有する</button>`
+      : `<a class="btn seal" id="dl" href="${url}" download="nazobon.png">画像を保存</a>`}</div>
+    <p class="hint">${canShare
+      ? "「写真に保存」を押して、出てきたメニューの「画像を保存」を選ぶと写真アプリに入ります。"
+      : "スマホでは画像を長押しして「写真に追加」（Androidは「画像をダウンロード」）を選ぶと写真アプリに入ります。"}
+      ストーリーズで ${esc(CONFIG.ACCOUNT)} をメンションしてシェアしてください。</p>`;
+  const sv = document.getElementById("doSave");
+  if (sv) sv.onclick = () => navigator.share({ files: [file] }).catch(() => {});
   const sh = document.getElementById("doShare");
   if (sh) sh.onclick = () => navigator.share({ files: [file], text: `謎本診断でおすすめされた3冊 ${CONFIG.ACCOUNT} #謎本診断` }).catch(() => {});
   send({ type: "click", kind: "story", book: "" });
