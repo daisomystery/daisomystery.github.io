@@ -108,6 +108,13 @@ button.plate { background: none; border: 0; padding: 4px 0; cursor: pointer; tex
 .hero .eyebrow { font-family: var(--f-latin); font-style: italic; font-size: 1rem; color: var(--oxblood) }
 .hero h1 { font-size: clamp(2.5rem, 11vw, 3.2rem); font-weight: 800; letter-spacing: .12em; line-height: 1.15 }
 .hero .sub { color: var(--ink-soft); margin: 0 }
+.hero .letter { text-align: left; width: 100%; max-width: 30em; display: grid; gap: 10px; padding: 14px 16px; border-left: 2px solid var(--gold-bright); background: rgba(201,163,90,.07);
+  font-size: clamp(13px, 3.6vw, 14.5px); line-height: 1.9; color: #f1e6cc }
+.hero .letter p { margin: 0 }
+.hero .letter .seg { display: inline-block }
+.hero .letter b { color: var(--flame); font-weight: 700 }
+.hero .letter .sign { justify-self: end; font-size: .9em; color: #e8d6ad; letter-spacing: .1em }
+.hero .letter .sign::before { content: "― " }
 .count { display: flex; gap: 22px; flex-wrap: wrap; justify-content: center; font-size: 13px; color: var(--ink-soft) }
 .count span { display: inline-flex; align-items: baseline; gap: 4px }
 .count b { color: var(--ink); font-size: 1.3rem; font-family: var(--f-display); font-weight: 700; font-variant-numeric: lining-nums tabular-nums; line-height: 1 }
@@ -837,7 +844,13 @@ function renderIntro() {
       <h1>謎本診断</h1>
       <span class="motto">Elementary, my dear reader.</span>
       <span class="rule" aria-hidden="true"></span>
-      <p class="sub">あなたがまだ出会っていない一冊は、<br>この書斎のどこかに眠っています。<br>手がかりは、あなたの答えだけ。<br>${BOOKS.length}冊の中から、<b>3冊</b>を突き止めましょう。</p>
+      <div class="letter">
+        <p><span class="seg">インスタで発信を続けて3年。</span><br><span class="seg">約5年で読んできた、</span><span class="seg">約400冊のミステリー。</span><br><span class="seg">その1冊1冊を、</span><span class="seg">自分で読んで</span><span class="seg">評価してきました。</span></p>
+        <p><span class="seg">紹介できる数は、</span><span class="seg">多くないかもしれません。</span><br><span class="seg">でも、</span><span class="seg">ちゃんと読んだ本だけだから、</span><br><span class="seg">自信を持って</span><span class="seg">おすすめできます。</span></p>
+        <p><span class="seg">投稿では</span><span class="seg">届けきれない、</span><br><span class="seg"><b>あなたに合う1冊</b>を、</span><span class="seg">ここから直接。</span></p>
+        <span class="sign">だいそう</span>
+      </div>
+      <p class="sub">いくつかの質問に答えるだけで、<br>${BOOKS.length}冊の中から<b>3冊</b>を選びます。</p>
       <div class="count"><span>蔵書 <b>${BOOKS.length}</b> 冊</span><span>質問 <b>8</b>〜<b>9</b> 問</span><span>所要 <b>1</b> 分</span></div>
       ${S.recs ? `<button class="btn ghost" id="resume" style="width:100%">前回の結果を見る</button>`
         : S.step > 0 ? `<button class="btn ghost" id="resume" style="width:100%">続きから再開する（${S.step + 1}問目）</button>` : ""}
