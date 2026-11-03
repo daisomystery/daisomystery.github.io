@@ -785,9 +785,8 @@ function activeReqs() { return Object.entries(REQ).map(([q, m]) => m[S.ans[q]]).
 function recommend(n = 3, sample = true) {
   const e = effects();
   const ids = bestIds(), bestBooks = BOOKS.filter(b => ids.includes(b.id));
-  // 「前作を先に読むべき」の本は、直前の巻を読んだ人（読んだリスト・最後の質問・好きな本の回答）にだけ出す
-  const readPrev = b => b.solo || (!!b.pv && (LISTS.read.has(b.pv) || S.read.has(b.pv) || S.bests.some(x => x.id === b.pv)));
-  const base0 = BOOKS.filter(b => b.asin && b.tw !== "C" && !ids.includes(b.id) && !S.read.has(b.id) && !LISTS.read.has(b.id) && !CONFIG.EXCLUDE.includes(b.t) && readPrev(b));
+  // 「前作を先に読むべき」の本も候補に入れる（結果カードに続編の注意文を出す）
+  const base0 = BOOKS.filter(b => b.asin && b.tw !== "C" && !ids.includes(b.id) && !S.read.has(b.id) && !LISTS.read.has(b.id) && !CONFIG.EXCLUDE.includes(b.t));
   // 残酷描写は「外す」と約束しているので、足りる限りは候補から外す（減点だけだと条件の加点に負けて出てしまう）
   const goreOk = base0.filter(b => (b.gore || 1) <= e.goreMax);
   const base = goreOk.length >= n * 3 ? goreOk : base0;
