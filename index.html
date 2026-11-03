@@ -1146,6 +1146,7 @@ function swapRead(id) {
   const box = document.getElementById("picks");
   box.innerHTML = S.recs.map(pickCard).join("");
   trackClicks(box, "result");
+  watchBuy(box);
   const h = loadHist(); if (h[0] && S.saved) { h[0].recs = S.recs.map(r => r.b.id); try { localStorage.setItem(HIST_KEY, JSON.stringify(h)) } catch (e) {} }
   const moved = S.recs.findIndex(r => next && r.b.id === next.b.id);
   toast(next ? `『${gone.b.t}』を読んだ本に記録しました。次のおすすめを${moved + 1}位に入れました` : "読んだ本に記録しました");
@@ -1186,6 +1187,7 @@ function renderResult() {
   document.getElementById("story").onclick = () => openStory(S.recs, wish);
   document.getElementById("toShelf").onclick = () => setView("shelf");
   trackClicks(app, "result");
+  BUY_SEEN.clear(); watchBuy(app);
   if (!S.sent) { S.sent = true; send({ type: "answer", answers: S.ans, pool: S.pool, weekly: Q.weekly ? Q.weekly.label : "",
     bests: S.bests.map(x => ({ text: x.t, id: x.id || "", title: x.id ? x.t : "" })),
     recs: recs.map(r => r.b.id), rec_titles: recs.map(r => r.b.t) }) }
@@ -1877,6 +1879,22 @@ function ga(payload) {   // Googleアナリティクスにも同じ出来事を�
     else if (payload.type === "answer") gtag("event", "diagnosis_complete");
     else if (payload.type === "click") gtag("event", "book_click", { click_kind: payload.kind || "", place: payload.place || "" });
   } catch (e) { }
+}
+// 結果画面の購入ボタンが画面に6割以上見えたら、Googleアナリティクスに1回だけ「buy_view」を送る（押されない原因が「見られていない」のか「見ても押さない」のかを分けるため）
+const BUY_SEEN = new Set();
+let buyObs = null;
+function watchBuy(root) {
+  if (typeof IntersectionObserver !== "function" || typeof gtag !== "function") return;
+  if (!buyObs) buyObs = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    const card = e.target.closest(".pickcard"), id = card && card.dataset.id;
+    buyObs.unobserve(e.target);
+    if (!id || BUY_SEEN.has(id)) return;
+    BUY_SEEN.add(id);
+    const rank = [...document.querySelectorAll("#picks .pickcard")].indexOf(card) + 1;
+    try { gtag("event", "buy_view", { rank: rank, place: "result" }) } catch (err) { }
+  }), { threshold: 0.6 });
+  root.querySelectorAll(".pickcard .buy").forEach(el => buyObs.observe(el));
 }
 function send(payload) {
   ga(payload);
