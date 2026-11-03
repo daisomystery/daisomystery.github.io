@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#170c0d">
 <meta name="format-detection" content="telephone=no">
+<!-- Googleアナリティクス（謎本診断） -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2RRGWKH420"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config","G-2RRGWKH420");</script>
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="謎本診断">
 <meta property="og:title" content="謎本診断｜今のあなたに合うミステリーが3冊見つかる">
@@ -904,6 +907,7 @@ function footer() {
     <details class="about"><summary>このサイトについて</summary>
       <p>謎本診断は、ミステリー紹介アカウント ${esc(CONFIG.ACCOUNT)} が運営しています。</p>
       <p>サイトの改善のため、診断の回答・おすすめした本・ボタンのクリックを、個人を特定できない形で集計しています。氏名やメールアドレスなどの個人情報は受け取りません。</p>
+      <p>アクセス状況の把握のため、Googleアナリティクスを使っています。Googleアナリティクスは Cookie を使って、個人を特定しない形でアクセス情報を集めます。詳しくは<a href="https://policies.google.com/technologies/partner-sites?hl=ja" target="_blank" rel="noopener">Googleのポリシー</a>をご覧ください。</p>
       <p>診断の履歴と「読みたい／読んだ」の記録は、お使いのブラウザに保存されます。引き継ぎコードを使った場合だけ、そのコードに結びつけた本のリストを集計用のシートに保存します。</p>
       <p>書影の一部は楽天ブックスの書誌データを利用しています。<a href="https://developers.rakuten.com/" target="_blank" rel="noopener">Supported by Rakuten Developers</a></p>
       <p>お問い合わせは Instagram（${esc(CONFIG.ACCOUNT)}）のDMまでお願いします。</p>
@@ -1863,7 +1867,16 @@ function fallbackCopy(t) { const ta = document.createElement("textarea"); ta.val
 function toast(m) { const t = document.getElementById("toast"); t.textContent = m; t.hidden = false; clearTimeout(toast.h); toast.h = setTimeout(() => t.hidden = true, 1800) }
 
 /* ===== 集計（Google Apps Script） ===== */
+function ga(payload) {   // Googleアナリティクスにも同じ出来事を送る（回答の中身や個人情報は送らない）
+  if (typeof gtag !== "function") return;
+  try {
+    if (payload.type === "start") gtag("event", "diagnosis_start");
+    else if (payload.type === "answer") gtag("event", "diagnosis_complete");
+    else if (payload.type === "click") gtag("event", "book_click", { click_kind: payload.kind || "", place: payload.place || "" });
+  } catch (e) { }
+}
 function send(payload) {
+  ga(payload);
   if (!CONFIG.GAS_URL) return;
   try { fetch(CONFIG.GAS_URL, { method: "POST", mode: "no-cors", keepalive: true, headers: { "Content-Type": "text/plain" }, body: JSON.stringify({ ...payload, ts: new Date().toISOString() }) }).catch(() => { }) } catch (e) { }   // 通信に失敗しても画面には影響させない
 }
