@@ -778,6 +778,8 @@ function scoreBook(b, e, bestBooks) {
     s += 3 * j; if (j >= 0.4) why.push([3 * j, "best"]);
     if (b.a && bestBooks.some(x => x.a === b.a)) { s += 0.8; why.push([0.8, "author"]) }
   }
+  // 「前作を先に読むべき」の本は、前作（直前の巻）を読んだ人以外には少しだけ下げる（候補からは外さない）
+  if (!b.solo && !(b.pv && (LISTS.read.has(b.pv) || S.read.has(b.pv) || S.bests.some(x => x.id === b.pv)))) s -= 1.5;
   s += 0.5 * rnd(b.id);
   why.sort((a, c) => c[0] - a[0]);
   return { b, s, why: why.map(x => x[1]) };
