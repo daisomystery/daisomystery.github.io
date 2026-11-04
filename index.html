@@ -645,7 +645,9 @@ const Q = {
   goose: { label: "鳥肌", title: "どんな鳥肌が好き？", opts: [
     { k: "flip", t: "見えていた世界がひっくり返る", d: "思い込みを揺さぶられたい", e: { ax: { twist: 1.6 } } },
     { k: "click", t: "散らばった手がかりが一本につながる", d: "論理で唸りたい", e: { ax: { logic: 1.4 }, f: { honkaku: 1 } } },
-    { k: "chase", t: "ページをめくる手が止まらない", d: "息つく暇のない展開", e: { ax: { immerse: 1.6 }, f: { suspense: 1.2 } } } ] },
+    { k: "chase", t: "ページをめくる手が止まらない", d: "息つく暇のない展開", e: { ax: { immerse: 1.6 }, f: { suspense: 1.2 } } },
+    { k: "ache", t: "真相を知って、胸が締めつけられる", d: "切なさが心に残る一冊", e: { ax: { twist: 0.8, after: 0.8 }, f: { yoin: 1.6, drama: 1.4 } } },
+    { k: "chill", t: "真相を知って、背筋が冷える", d: "読み終えてからゾッとする一冊", e: { ax: { twist: 0.8 }, f: { iyamisu: 1.6, psycho: 1.2 } } } ] },
   cry: { label: "涙", title: "どんな涙を流したい？", opts: [
     { k: "family", t: "家族や大切な人を想う涙", e: { f: { drama: 1.6 } } },
     { k: "youth", t: "青春のまぶしさと痛みの涙", e: { f: { seishun: 2.6 } } },
@@ -792,7 +794,7 @@ const REQ = {
 const axv = (b, i) => b.s[i] != null && b.s[i] >= 4;
 const anyF = (...ks) => b => ks.some(k => b.f.includes(k) || b[k] === true);
 const CORE_REQ = {
-  goose: { flip: b => axv(b, 1), click: b => anyF("honkaku")(b) || axv(b, 0), chase: b => anyF("suspense")(b) || axv(b, 2) },
+  goose: { flip: b => axv(b, 1), click: b => anyF("honkaku")(b) || axv(b, 0), chase: b => anyF("suspense")(b) || axv(b, 2), ache: anyF("yoin", "drama"), chill: anyF("iyamisu", "psycho") },
   cry: { family: anyF("drama"), youth: anyF("seishun"), society: anyF("shakai") },
   scare: { human: anyF("psycho"), bitter: anyF("iyamisu"), unknown: anyF("special", "ghost") },
   think: { solve: anyF("honkaku"), battle: anyF("zuno"), rule: anyF("special") },
@@ -857,7 +859,8 @@ function recommend(n = 3, sample = true) {
 
 /* ===== 「こんな本が読みたい」：答えから依頼文をつくる（作品の仕掛けにはふれない言い方にする） ===== */
 const WISH_CORE = {
-  goose: { flip: "読み終えた瞬間、思わず鳥肌が立つ本", click: "散らばった手がかりが、最後に一本につながる本", chase: "ページをめくる手が止まらない本" },
+  goose: { flip: "読み終えた瞬間、思わず鳥肌が立つ本", click: "散らばった手がかりが、最後に一本につながる本", chase: "ページをめくる手が止まらない本",
+    ache: "真相を知ったとき、胸が締めつけられる本", chill: "真相を知ったとき、背筋が冷える本" },
   cry: { family: "大切な人を想って、涙がこぼれる本", youth: "青春のまぶしさと痛みに、泣ける本", society: "社会の理不尽に向き合い、胸が熱くなる本" },
   scare: { human: "人間の狂気に、背筋が凍る本", bitter: "読み終えたあとも引きずる、後味の悪い本", unknown: "得体の知れない怖さが、じわじわ迫る本" },
   think: { solve: "自分で犯人当てに挑める本", battle: "天才同士の頭脳戦に、手に汗握る本", rule: "ありえない設定の中で、推理を楽しめる本" },
