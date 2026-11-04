@@ -1878,7 +1878,8 @@ async function makeStory(recs, wish) {
     lines.forEach((l, k) => g.fillText(l, x0 + 180, y + 115 + k * 60));
     g.fillStyle = "#d8c8a6"; g.font = `500 32px ${MIN}`; g.fillText(b.a, x0 + 180, y + 115 + lines.length * 60 + 4);
   });
-  center("あなたの1冊は、どこに眠っている？", 1728, `500 38px ${MIN}`, cream);
+  center("※蔵書数の都合により、選んだ条件に合わない作品が出る場合があります。", 1680, `500 23px ${MIN}`, "#bfae8a");
+  center("あなたの1冊は、どこに眠っている？", 1738, `500 38px ${MIN}`, cream);
   center(`謎本診断　${CONFIG.ACCOUNT}`, 1786, `800 36px ${MIN}`, brass);
   if (CONFIG.SITE_URL) center(CONFIG.SITE_URL.replace(/^https?:\/\//, ""), 1830, `500 26px ${CAPS}`, "#d8c8a6");
   return c;
