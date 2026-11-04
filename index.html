@@ -418,6 +418,7 @@ dialog.detail .card { max-height: calc(100vh - 48px); max-height: calc(100dvh - 
   @keyframes rise { from { opacity: .5; transform: translateY(6px) } to { opacity: 1; transform: none } }
 }
 @media (prefers-reduced-motion: reduce) { .face { transition: none } .face:hover { transform: none } }
+.odai-title { text-wrap: wrap; word-break: keep-all; overflow-wrap: anywhere }
 .odai-note label { font-size: 14px }
 .odai-note textarea { font: inherit; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 2px; background: var(--parch); color: var(--ink); width: 100%; resize: vertical }
 .odai-meta { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; color: var(--ink-soft) }
@@ -713,11 +714,11 @@ const POOL = ["place", "length", "detective", "device"];   // ここから毎回
 const FLOW_TAIL = ["best"];   // 今月のお題の期間は "best" の代わりに "odai"（お題の本1冊＋ひとこと）を出す
 /* ===== 今月のお題（毎月26日0時に切り替え。カレンダーは odai_calendar.json） ===== */
 const ODAI_CAL = [
-  {"id": "2026-11", "from": "2026-11-04", "to": "2026-11-25", "title": "一気読みが止まらなかったミステリーは？"},
-  {"id": "2026-12", "from": "2026-11-26", "to": "2026-12-25", "title": "今年読んだ中で一番のミステリーは？"},
-  {"id": "2027-01", "from": "2026-12-26", "to": "2027-01-25", "title": "ミステリーにハマるきっかけになった1冊は？"},
-  {"id": "2027-02", "from": "2027-01-26", "to": "2027-02-25", "title": "一番ゾッとしたミステリーは？"},
-  {"id": "2027-03", "from": "2027-02-26", "to": "2027-03-25", "title": "友だちに一番すすめたい1冊は？"}
+  {"id": "2026-11", "from": "2026-11-04", "to": "2026-11-25", "title": "一気読みが止まらなかったミステリーは？", "br": "一気読みが止まらなかった\nミステリーは？"},
+  {"id": "2026-12", "from": "2026-11-26", "to": "2026-12-25", "title": "今年読んだ中で一番のミステリーは？", "br": "今年読んだ中で一番の\nミステリーは？"},
+  {"id": "2027-01", "from": "2026-12-26", "to": "2027-01-25", "title": "ミステリーにハマるきっかけになった1冊は？", "br": "ミステリーにハマる\nきっかけになった1冊は？"},
+  {"id": "2027-02", "from": "2027-01-26", "to": "2027-02-25", "title": "一番ゾッとしたミステリーは？", "br": "一番ゾッとした\nミステリーは？"},
+  {"id": "2027-03", "from": "2027-02-26", "to": "2027-03-25", "title": "友だちに一番すすめたい1冊は？", "br": "友だちに一番\nすすめたい1冊は？"}
 ]
 ;
 const ODAI_NOTE_MAX = 40, AID_KEY = "nazobon_aid", ODAI_KEY = "nazobon_odai", FROM_KEY = "nazobon_from";
@@ -1196,8 +1197,8 @@ function renderOdai(f) {
     : `<li class="slot-b"><span class="sn">1</span><div class="st"><input class="bestInput" type="text" autocomplete="off" aria-label="お題の本の書名" placeholder="書名の一部を入れると候補が出ます"><div class="sugs"></div></div></li>`;
   app.innerHTML = qFrame(f, `
       <span class="chip" style="justify-self:start">今月のお題</span>
-      <h2>${esc(ODAI.title)}</h2>
-      <p class="hint">1冊だけ選んでください（答えなくても結果は見られます）。集まった票は、Instagram（@daiso_mysterylover）で「フォロワーが選んだミステリー」として紹介します。選んだ本は、おすすめの推理にも使います。</p>
+      <h2 class="odai-title">${esc(ODAI.br || ODAI.title).replace(/\n/g, "<br>")}</h2>
+      <p class="hint">1冊だけ選んでください（答えなくても結果は見られます）。集まった票は、Instagram（@daiso_mysterylover）で「フォロワーが選んだおすすめミステリー」として紹介します。選んだ本は、おすすめの推理にも使います。</p>
       <ol class="slots">${slot}</ol>
       <div class="field odai-note"><label for="odaiNote">その本を選んだ理由（任意・${ODAI_NOTE_MAX}字まで）</label>
         <textarea id="odaiNote" rows="2" maxlength="${ODAI_NOTE_MAX}" placeholder="ひとことでどうぞ">${esc(S.odaiNote || "")}</textarea>
