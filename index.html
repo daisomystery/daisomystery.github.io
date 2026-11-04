@@ -416,6 +416,10 @@ dialog.detail .card { max-height: calc(100vh - 48px); max-height: calc(100dvh - 
   @keyframes rise { from { opacity: .5; transform: translateY(6px) } to { opacity: 1; transform: none } }
 }
 @media (prefers-reduced-motion: reduce) { .face { transition: none } .face:hover { transform: none } }
+.odai-note label { font-size: 14px }
+.odai-note textarea { font: inherit; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 2px; background: var(--parch); color: var(--ink); width: 100%; resize: vertical }
+.odai-meta { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; color: var(--ink-soft) }
+.odai-meta small { font-size: 11.5px; line-height: 1.6 }
 </style>
 </head>
 <body>
@@ -703,7 +707,42 @@ const Q = {
 const FLOW_HEAD = ["level", "feel"];      // feel の答えで3問目が変わる
 const FLOW_FIXED = ["gore"];
 const POOL = ["place", "length", "detective", "device"];   // ここから毎回2問をランダムに出す
-const FLOW_TAIL = ["best"];
+const FLOW_TAIL = ["best"];   // 今月のお題の期間は "best" の代わりに "odai"（お題の本1冊＋ひとこと）を出す
+/* ===== 今月のお題（毎月26日0時に切り替え。カレンダーは odai_calendar.json） ===== */
+const ODAI_CAL = [
+  {"id": "2026-12", "from": "2026-11-26", "to": "2026-12-25", "title": "今年読んだ中で一番のミステリーは？"},
+  {"id": "2027-01", "from": "2026-12-26", "to": "2027-01-25", "title": "ミステリーにハマるきっかけになった1冊は？"},
+  {"id": "2027-02", "from": "2027-01-26", "to": "2027-02-25", "title": "一番ゾッとしたミステリーは？"},
+  {"id": "2027-03", "from": "2027-02-26", "to": "2027-03-25", "title": "友だちに一番すすめたい1冊は？"}
+]
+;
+const ODAI_NOTE_MAX = 40, AID_KEY = "nazobon_aid", ODAI_KEY = "nazobon_odai", FROM_KEY = "nazobon_from";
+function todayStr() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}` }
+const ODAI = (() => { const t = todayStr(); return ODAI_CAL.find(x => t >= x.from && t <= x.to) || null })();
+// 流入元（?from=story など）。英数字20字まで。このタブの間だけ覚えておく
+const FROM = (() => {
+  let v = ""; try { v = new URLSearchParams(location.search).get("from") || "" } catch (e) {}
+  v = /^[A-Za-z0-9_-]{1,20}$/.test(v) ? v.toLowerCase() : "";
+  try { if (v) sessionStorage.setItem(FROM_KEY, v); else v = sessionStorage.getItem(FROM_KEY) || "" } catch (e) {}
+  return v;
+})();
+function anonId() {   // ブラウザごとのランダムなID（個人を特定する情報は含まない）。同じIDの同じお題は1票として数える
+  let a = ""; try { a = localStorage.getItem(AID_KEY) || "" } catch (e) {}
+  if (!/^[A-Za-z0-9]{16}$/.test(a)) {
+    const A = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789", r = new Uint32Array(16); crypto.getRandomValues(r);
+    a = [...r].map(x => A[x % A.length]).join(""); try { localStorage.setItem(AID_KEY, a) } catch (e) {}
+  }
+  return a;
+}
+function odaiSaved() { try { const v = JSON.parse(localStorage.getItem(ODAI_KEY) || "null"); return v && ODAI && v.id === ODAI.id && v.t ? v : null } catch (e) { return null } }
+// 診断を始めるときに決める：'ask'＝お題の設問を出す／'saved'＝回答ページなどで答え済みなので出さず、その本を計算に使う／null＝お題の期間外（好きな本の設問）
+function odaiStart() {
+  if (!ODAI) return { odai: null, bests: [] };
+  const v = odaiSaved();
+  if (!v) return { odai: "ask", bests: [] };
+  const b = v.bid && BOOKS.find(y => y.id === v.bid);
+  return { odai: "saved", bests: [{ id: b ? b.id : null, t: b ? b.t : v.t }] };
+}
 const LABEL_F = { honkaku: "本格", shakai: "社会派", iyamisu: "イヤミス", psycho: "サイコ・ホラー", cozy: "日常の謎", special: "特殊設定",
   seishun: "青春", closed: "閉ざされた舞台", suspense: "サスペンス", zuno: "頭脳戦", drama: "人間ドラマ", humor: "ユーモア",
   history: "歴史", industry: "お仕事", armchair: "安楽椅子探偵", short: "短編集",
@@ -717,14 +756,14 @@ const bestIds = () => S.bests.filter(x => x.id).map(x => x.id);
 // 診断の途中・結果を、ページを読み込み直しても続きから見られるように、このタブの間だけ保存する
 const ST_KEY = "nazobon_state_v1";
 function saveState() {
-  try { sessionStorage.setItem(ST_KEY, JSON.stringify({ step: S.step, ans: S.ans, bests: S.bests, read: [...S.read], seed: S.seed, pool: S.pool, relaxed: !!S.relaxed, saved: !!S.saved, sent: !!S.sent,
+  try { sessionStorage.setItem(ST_KEY, JSON.stringify({ step: S.step, ans: S.ans, bests: S.bests, odai: S.odai || null, odaiNote: S.odaiNote || "", read: [...S.read], seed: S.seed, pool: S.pool, relaxed: !!S.relaxed, saved: !!S.saved, sent: !!S.sent,
     recs: S.recs ? S.recs.map(r => ({ id: r.b.id, s: r.s, why: r.why })) : null })) } catch (e) {}
 }
 function restoreState() {
   try {
     const v = JSON.parse(sessionStorage.getItem(ST_KEY) || "null"); if (!v || !v.ans || !Object.keys(v.ans).length) return false;
     const recs = v.recs ? v.recs.map(r => ({ b: BOOKS.find(b => b.id === r.id), s: r.s, why: r.why || [] })).filter(r => r.b) : null;
-    Object.assign(S, { step: v.step || 0, ans: v.ans, bests: v.bests || [], read: new Set(v.read || []), seed: v.seed || Math.random(), pool: v.pool || pickPool(), relaxed: v.relaxed, saved: v.saved, sent: v.sent, recs: recs && recs.length ? recs : null });
+    Object.assign(S, { step: v.step || 0, ans: v.ans, bests: v.bests || [], odai: v.odai || null, odaiNote: v.odaiNote || "", read: new Set(v.read || []), seed: v.seed || Math.random(), pool: v.pool || pickPool(), relaxed: v.relaxed, saved: v.saved, sent: v.sent, recs: recs && recs.length ? recs : null });
     return true;
   } catch (e) { return false }
 }
@@ -735,7 +774,7 @@ function flow() {
   if (feel && feel.next) f.push(feel.next); else f.push("_pending");
   f.push(...FLOW_FIXED, ...S.pool);
   if (Q.weekly) f.push("weekly");
-  f.push(...FLOW_TAIL);
+  if (S.odai === "ask") f.push("odai"); else if (!S.odai) f.push(...FLOW_TAIL);
   if (needReadCheck()) f.push("read");
   return f;
 }
@@ -950,7 +989,7 @@ function ledger() {
     const q = Q[qk]; const o = q && q.opts.find(x => x.k === ak);
     return o ? `<div><span class="latin">Q.${i + 1}</span><span>${esc(q.label)}：${esc(o.t)}</span></div>` : "";
   }).join("");
-  const best = S.bests.length ? `<div><span class="latin">Fav.</span><span>好きな本：${S.bests.map(x => esc(x.t)).join("／")}</span></div>` : "";
+  const best = S.bests.length ? `<div><span class="latin">Fav.</span><span>${S.odai ? "お題の1冊" : "好きな本"}：${S.bests.map(x => esc(x.t)).join("／")}</span></div>` : "";
   return rows || best ? `<div class="ledger">${rows}${best}</div>` : "";
 }
 function footer() {
@@ -1032,7 +1071,7 @@ function renderIntro() {
     <div class="card-body"><ol class="rank-list" id="rankList"></ol></div>
   </section>
   ${footer()}`;
-  document.getElementById("start").onclick = () => { send({ type: "start" }); Object.assign(S, { step: 0, ans: {}, bests: [], read: new Set(), seed: Math.random(), pool: pickPool(), recs: null, saved: false, sent: false }); renderStep() };
+  document.getElementById("start").onclick = () => { send({ type: "start" }); Object.assign(S, { step: 0, ans: {}, bests: [], odaiNote: "", read: new Set(), seed: Math.random(), pool: pickPool(), recs: null, saved: false, sent: false }, odaiStart()); renderStep() };
   const rs = document.getElementById("resume"); if (rs) rs.onclick = () => { S.recs ? renderResult() : renderStep() };
   document.getElementById("toShelf").onclick = () => setView("shelf");
   const hero = app.querySelector(".hero"); if (hero) hero.insertAdjacentHTML("afterend", carousel("carTop", "top"));
@@ -1071,6 +1110,7 @@ function renderStep() {
   const key = f[S.step];
   if (!key) return renderResult();
   if (key === "best") return renderBest(f);
+  if (key === "odai") return renderOdai(f);
   if (key === "read") return renderRead(f);
   const q = Q[key];
   app.innerHTML = qFrame(f, `
@@ -1142,6 +1182,58 @@ function renderBest(f, focusSlot) {
       if (!S.bests.some(y => norm(y.t) === norm(x.t))) S.bests.push(x) }
     S.step++; renderStep();
   };
+}
+
+// 今月のお題（任意）。本1冊＋ひとこと。答えた本は「好きな本」と同じく、好みの寄せと結果からの除外に使う
+function renderOdai(f) {
+  const x = S.bests[0];
+  const slot = x ? (() => { const b = x.id && BOOKS.find(y => y.id === x.id);
+      return `<li class="slot-b on"><span class="sn">1</span><span class="st">${esc(x.t)}${b ? `<small>${esc(b.a)}</small>` : ""}</span><button class="rm" aria-label="${esc(x.t)}を外す">外す</button></li>` })()
+    : `<li class="slot-b"><span class="sn">1</span><div class="st"><input class="bestInput" type="text" autocomplete="off" aria-label="お題の本の書名" placeholder="書名の一部を入れると候補が出ます"><div class="sugs"></div></div></li>`;
+  app.innerHTML = qFrame(f, `
+      <span class="chip" style="justify-self:start">今月のお題</span>
+      <h2>${esc(ODAI.title)}</h2>
+      <p class="hint">1冊だけ選んでください（答えなくても結果は見られます）。集まった票は、Instagram（@daiso_mysterylover）で「フォロワーが選んだミステリー」として紹介します。選んだ本は、おすすめの推理にも使います。</p>
+      <ol class="slots">${slot}</ol>
+      <div class="field odai-note"><label for="odaiNote">その本を選んだ理由（任意・${ODAI_NOTE_MAX}字まで）</label>
+        <textarea id="odaiNote" rows="2" maxlength="${ODAI_NOTE_MAX}" placeholder="ひとことでどうぞ">${esc(S.odaiNote || "")}</textarea>
+        <div class="odai-meta"><small>投稿で、お名前を出さずに紹介することがあります。</small><small id="odaiCnt"></small></div></div>
+      <div class="nav"><button class="linkbtn" id="back">← ひとつ戻る</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">${x ? "" : `<button class="btn ghost" id="skip">飛ばす</button>`}<button class="btn" id="next">次へ</button></div></div>
+      ${ledger()}`, "Monthly Theme");
+  const ta = document.getElementById("odaiNote"), cnt = document.getElementById("odaiCnt");
+  const paint = () => { cnt.textContent = `${ta.value.length} / ${ODAI_NOTE_MAX}` }; paint();
+  ta.oninput = () => { S.odaiNote = ta.value.slice(0, ODAI_NOTE_MAX); paint() };
+  const rm = app.querySelector(".rm"); if (rm) rm.onclick = () => { S.bests = []; renderOdai(f); const i = app.querySelector(".bestInput"); if (i) i.focus({ preventScroll: true }) };
+  const inp = app.querySelector(".bestInput");
+  if (inp) {
+    const sugs = app.querySelector(".sugs");
+    inp.oninput = () => {
+      const v = norm(inp.value);
+      const m = v.length < 1 ? [] : BOOKS.filter(b => norm(b.t).includes(v) || norm(b.a).includes(v)).slice(0, 5);
+      sugs.innerHTML = m.map(b => `<button class="sug" data-id="${b.id}">${esc(b.t)}<small>${esc(b.a)}</small></button>`).join("")
+        + (inp.value.trim() && !m.some(b => norm(b.t) === v) ? `<button class="sug" data-raw="1">「${esc(inp.value.trim().slice(0, 60))}」で答える<small>リストにない本</small></button>` : "");
+      sugs.querySelectorAll(".sug").forEach(el => el.onclick = () => {
+        if (el.dataset.raw) S.bests = [{ id: null, t: inp.value.trim().slice(0, 60) }];
+        else { const b = BOOKS.find(y => y.id === el.dataset.id); S.bests = [{ id: b.id, t: b.t }] }
+        renderOdai(f);
+      });
+    };
+    inp.onkeydown = e => { if (e.key === "Enter") { e.preventDefault(); const first = sugs.querySelector(".sug"); if (first) first.click() } };
+  }
+  document.getElementById("back").onclick = () => { S.step--; renderStep() };
+  const skip = document.getElementById("skip"); if (skip) skip.onclick = () => { S.bests = []; S.step++; renderStep() };
+  document.getElementById("next").onclick = () => {
+    const v = inp && inp.value.trim();
+    if (v) { const hit = BOOKS.find(b => norm(b.t) === norm(v)); S.bests = [hit ? { id: hit.id, t: hit.t } : { id: null, t: v.slice(0, 60) }] }
+    const y = S.bests[0];
+    if (y) {
+      try { localStorage.setItem(ODAI_KEY, JSON.stringify({ id: ODAI.id, t: y.t, bid: y.id || "", at: Date.now() })) } catch (e) {}
+      send({ type: "odai", id: ODAI.id, text: y.t, title: y.id ? y.t : "", bid: y.id || "", comment: (S.odaiNote || "").slice(0, ODAI_NOTE_MAX), place: "diagnosis", from: FROM, aid: anonId() });
+    }
+    S.step++; renderStep();
+  };
+  window.scrollTo({ top: 0 });
 }
 
 function renderRead(f) {
@@ -1241,7 +1333,8 @@ function renderResult() {
   trackClicks(app, "result");
   BUY_SEEN.clear(); watchBuy(app);
   if (!S.sent) { S.sent = true; send({ type: "answer", answers: S.ans, pool: S.pool, weekly: Q.weekly ? Q.weekly.label : "",
-    bests: S.bests.map(x => ({ text: x.t, id: x.id || "", title: x.id ? x.t : "" })),
+    bests: S.odai ? [] : S.bests.map(x => ({ text: x.t, id: x.id || "", title: x.id ? x.t : "" })),   // お題の期間は「好きな本」の列は空（お題の本は odai_answers に入る）
+    from: FROM,
     recs: recs.map(r => r.b.id), rec_titles: recs.map(r => r.b.t) }) }
   loadRanking();
   window.scrollTo({ top: 0 });
@@ -1945,6 +2038,7 @@ function ga(payload) {   // Googleアナリティクスにも同じ出来事を�
   try {
     if (payload.type === "start") gtag("event", "diagnosis_start");
     else if (payload.type === "answer") gtag("event", "diagnosis_complete");
+    else if (payload.type === "odai") gtag("event", "odai_answer", { place: payload.place || "", from: payload.from || "direct" });
     else if (payload.type === "click") gtag("event", "book_click", { click_kind: payload.kind || "", place: payload.place || "" });
   } catch (e) { }
 }
