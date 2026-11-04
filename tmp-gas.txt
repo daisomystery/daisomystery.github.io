@@ -1,0 +1,408 @@
+/**
+ * 謎本診断の回答集計（Google Apps Script）
+ *
+ * 使い方：Googleスプレッドシートを新規作成 → 拡張機能 → Apps Script に、このファイルの中身を貼り付ける。
+ * デプロイ → 新しいデプロイ → 種類「ウェブアプリ」、実行ユーザー「自分」、アクセス「全員」で公開し、
+ * 表示されたURLを index.html の CONFIG.GAS_URL に貼る。
+ *
+ * シート
+ *  - responses：診断の回答（1行＝1回の診断）
+ *  - starts   ：「依頼をはじめる」が押された回数（1行＝1回。完了率の計算用）
+ *  - clicks   ：購入ボタンなどのクリック（Amazon / Audible / ブクログ / ストーリーズ画像 / もう読んだ）
+ *  - ranking  ：好きなミステリーの集計（自動で作り直す）。1人最大3冊、1冊1票
+ *  - users    ：読みたい／読んだの記録（引き継ぎコードごとに1行。コードは端末で作るランダムな8文字で、個人情報は含まない）
+ *  - report_YYYY-MM：月次レポート（monthlyReport を実行すると作られる。投稿ネタ用）
+ *  - odai_answers：今月のお題の回答（1行＝1回の送信。回答ページ /odai/ と診断の最後の設問の両方から届く）
+ *  - odai     ：今月のお題の集計（お題ごとの順位・票数・一言。dashboard と一緒に作り直す）
+ *  - dashboard：月ごとの集計（いちばん左のシート。1時間ごとに作り直す）
+ *
+ * 匿名ID：サイトがブラウザごとに作るランダムな16文字。同じ人の同じお題を1票にまとめるためだけに使う
+ *
+ * 個人を特定できる情報は受け取らない（氏名・メール・IPアドレスなどは保存しない）。
+ */
+
+const RESP_HEADERS = ["日時", "経験", "読後", "深掘り", "残酷描写", "可変の設問", "今週の1問",
+  "好きな本1", "好きな本2", "好きな本3", "集計キー1", "集計キー2", "集計キー3", "おすすめ1", "おすすめ2", "おすすめ3"];
+const BEST_COL = 7, KEY_COL = 10, REC_COL = 13;  // 「好きな本1」「集計キー1」「おすすめ1」の列（0始まり）
+// サイトの選択肢キー → 表示名（月次レポート用）
+const LABELS = {
+  feel: { goose: "鳥肌が立っていたい", cry: "泣いていたい", scare: "ゾッとしていたい", think: "頭がフル回転していたい", fun: "楽しかった！と笑っていたい" },
+  level: { new: "ほとんど読んだことがない", some: "ときどき読む", deep: "かなり読んでいる" },
+  gore: { low: "苦手", mid: "少しなら大丈夫", any: "平気" },
+};
+const CLICK_HEADERS = ["日時", "種類", "作品ID", "書名", "場所"];
+const USER_HEADERS = ["引き継ぎコード", "更新日時", "読みたい", "読んだ"];
+const UID_RE = /^[A-Z0-9]{4}-[A-Z0-9]{4}$/, BOOK_RE = /^[0-9a-f]{12}$/;
+// 今月のお題（2026-11 追加）
+const ODAI_HEADERS = ["日時", "お題ID", "本（入力）", "本（作品DB）", "集計キー", "一言", "回答した場所", "流入元", "匿名ID"];
+const AID_RE = /^[A-Za-z0-9]{16}$/, ODAI_ID_RE = /^\d{4}-\d{2}$/, FROM_RE = /^[a-z0-9_-]{1,20}$/;
+const PLACE_LABEL = { page: "回答ページ", diagnosis: "診断" };
+// お題ID（投稿する月）→ お題の文。サイトの site/odai_calendar.json と合わせる
+const ODAI_TITLES = {
+  "2026-12": "今年読んだ中で一番のミステリーは？",
+  "2027-01": "ミステリーにハマるきっかけになった1冊は？",
+  "2027-02": "一番ゾッとしたミステリーは？",
+  "2027-03": "友だちに一番すすめたい1冊は？",
+};
+
+function sheet_(name, headers) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sh = ss.getSheetByName(name);
+  if (!sh) {
+    sh = ss.insertSheet(name);
+    if (headers) sh.appendRow(headers);
+  }
+  return sh;
+}
+
+/** 表記ゆれをそろえる（全角半角・空白・記号） */
+function normKey_(s) {
+  return String(s || "").normalize("NFKC").toLowerCase().replace(/[\s・、。!?！？「」『』〈〉()（）\-ー―]/g, "");
+}
+
+/** シートに書く文字列が「=」などで始まると数式として動くので、先頭に「'」を付けて文字として保存する */
+function safe_(v, n) { const s = String(v == null ? "" : v).slice(0, n || 100); return /^[=+\-@]/.test(s) ? "'" + s : s; }
+
+function doPost(e) {
+  let d;
+  try { d = JSON.parse(e.postData.contents); } catch (err) { return out_("bad request"); }
+  const ts = new Date();
+  if (d.type === "start") {
+    sheet_("starts", ["日時"]).appendRow([ts]);
+    return out_("ok");
+  }
+  if (d.type === "click") {
+    sheet_("clicks", CLICK_HEADERS).appendRow([ts, safe_(d.kind, 20), safe_(d.book, 20),
+      safe_(d.title, 80), safe_(d.place, 20)]);
+    return out_("ok");
+  }
+  if (d.type === "lists") {
+    const uid = String(d.uid || "");
+    if (!UID_RE.test(uid)) return out_("bad uid");
+    const clean = a => (Array.isArray(a) ? a : []).map(String).filter(x => BOOK_RE.test(x)).slice(0, 2000);
+    const want = clean(d.want), read = clean(d.read);
+    const lock = LockService.getScriptLock(); if (!lock.tryLock(5000)) return out_("busy");
+    try {
+      const sh = sheet_("users", USER_HEADERS);
+      const row = findUser_(sh, uid);
+      const vals = [[uid, ts, JSON.stringify(want), JSON.stringify(read)]];
+      if (row) sh.getRange(row, 1, 1, 4).setValues(vals); else sh.appendRow(vals[0]);
+    } finally { lock.releaseLock(); }
+    return out_("ok");
+  }
+  if (d.type === "odai") {
+    // 今月のお題。本の入力がない・お題IDの形が違うものは捨てる。氏名やメールなどは受け取らない
+    const id = String(d.id || "");
+    const text = safe_(String(d.text || "").replace(/\s+/g, " ").trim(), 60), title = safe_(d.bid && BOOK_RE.test(String(d.bid)) ? d.title : "", 100);
+    const key = normKey_(title || text);
+    if (!ODAI_ID_RE.test(id) || !key) return out_("bad odai");
+    const note = safe_(String(d.comment || "").replace(/\s+/g, " ").trim(), 40);
+    const place = d.place === "diagnosis" ? "diagnosis" : "page";
+    const from = FROM_RE.test(String(d.from || "")) ? String(d.from) : "";
+    const aid = AID_RE.test(String(d.aid || "")) ? String(d.aid) : "";
+    const sh = sheet_("odai_answers", ODAI_HEADERS);
+    sh.getRange(sh.getLastRow() + 1, 2).setNumberFormat("@");   // "2026-12" が日付に変わらないよう文字として保存
+    sh.appendRow([ts, id, text, title, key, note, place, from, aid]);
+    CacheService.getScriptCache().remove("odai_count_" + id);
+    return out_("ok");
+  }
+  if (d.type === "answer") {
+    const a = d.answers || {};
+    const sub = a.goose || a.cry || a.scare || a.think || a.fun || "";
+    // 好きな本（最大3冊）。作品DBにある本は正式な題名、ない本は入力のまま。同じ回答内の重複は1票にまとめる
+    const seen = {};
+    const bests = (Array.isArray(d.bests) ? d.bests : []).filter(b => b && typeof b === "object").slice(0, 3).map(b => {
+      const title = safe_(b.title || b.text, 100);
+      return { title: title, key: normKey_(title) };
+    }).filter(b => b.key && !seen[b.key] && (seen[b.key] = true));
+    while (bests.length < 3) bests.push({ title: "", key: "" });
+    const recs = (Array.isArray(d.rec_titles) ? d.rec_titles : []).slice(0, 3).map(t => safe_(t, 100));
+    // 可変の設問は「設問=答え」を「 / 」でつなぐ（例：place=closed / device=locked）
+    const pool = safe_((Array.isArray(d.pool) ? d.pool : []).slice(0, 4).map(k => k + "=" + (a[k] || "")).join(" / "), 200);
+    const weekly = d.weekly ? safe_(String(d.weekly).slice(0, 30) + "=" + (a.weekly || ""), 60) : "";
+    sheet_("responses", RESP_HEADERS).appendRow([ts, safe_(a.level, 20), safe_(a.feel, 20), safe_(sub, 20), safe_(a.gore, 20), pool, weekly,
+      bests[0].title, bests[1].title, bests[2].title, bests[0].key, bests[1].key, bests[2].key, recs[0] || "", recs[1] || "", recs[2] || ""]);
+    return out_("ok");
+  }
+  return out_("unknown type");
+}
+
+/** ?mode=ranking で好きなミステリーの上位10件をJSONで返す（サイトの「みんなのベストミステリー」に表示） */
+function doGet(e) {
+  const q = e.parameter || {};
+  if (q.mode === "lists") {
+    // 引き継ぎコードで、読みたい／読んだの記録を返す
+    const uid = String(q.uid || "");
+    if (!UID_RE.test(uid)) return json_({});
+    const sh = sheet_("users", USER_HEADERS), row = findUser_(sh, uid);
+    if (!row) return json_({});
+    const v = sh.getRange(row, 1, 1, 4).getValues()[0];
+    const parse = x => { try { return JSON.parse(x) } catch (err) { return [] } };
+    return json_({ want: parse(v[2]), read: parse(v[3]), ts: v[1] instanceof Date ? v[1].getTime() : 0 });
+  }
+  if (q.mode === "cover") {
+    // ストーリーズ画像に書影を描くため、楽天ブックスの書影をデータURLで返す（楽天の画像サーバー以外は取りに行かない）
+    const path = String(q.p || "");
+    if (path.length > 120 || !/^[0-9]{4}\/[\w.\-]+\.(jpg|jpeg|gif|png)$/i.test(path)) return json_({});
+    const cache = CacheService.getScriptCache(), key = "cv_" + path.replace(/[^\w]/g, "_");
+    const hit = cache.get(key);
+    if (hit) return json_({ d: hit });
+    try {
+      const r = UrlFetchApp.fetch("https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/" + path + "?_ex=300x300", { muteHttpExceptions: true });
+      if (r.getResponseCode() !== 200) return json_({});
+      const blob = r.getBlob(), d = "data:" + blob.getContentType() + ";base64," + Utilities.base64Encode(blob.getBytes());
+      if (d.length < 95000) cache.put(key, d, 21600);
+      return json_({ d: d });
+    } catch (err) { return json_({}); }
+  }
+  if (q.mode === "odai_count") {
+    // 今月のお題の回答人数だけを返す（途中の順位は出さない）
+    const id = String(q.id || "");
+    if (!ODAI_ID_RE.test(id)) return json_({ count: 0 });
+    const cache = CacheService.getScriptCache(), ck = "odai_count_" + id, hit = cache.get(ck);
+    if (hit) return json_({ count: +hit });
+    const n = odaiVotes_().filter(v => v.id === id).length;
+    cache.put(ck, String(n), 300);
+    return json_({ count: n });
+  }
+  if (q.mode !== "ranking") return out_("ok");
+  const cache = CacheService.getScriptCache();
+  const hit = cache.get("ranking");
+  if (hit) return json_(JSON.parse(hit));
+  const list = buildRanking_(30);
+  cache.put("ranking", JSON.stringify(list), 600);
+  return json_(list);
+}
+
+function findUser_(sh, uid) {
+  const last = sh.getLastRow(); if (last < 2) return 0;
+  const hit = sh.getRange(2, 1, last - 1, 1).createTextFinder(uid).matchEntireCell(true).findNext();
+  return hit ? hit.getRow() : 0;
+}
+
+function buildRanking_(n) {
+  const sh = sheet_("responses", RESP_HEADERS);
+  const rows = sh.getDataRange().getValues().slice(1);
+  const count = {}, label = {};
+  rows.forEach(r => {
+    for (let i = 0; i < 3; i++) {
+      const key = r[KEY_COL + i], title = r[BEST_COL + i];
+      if (!key) continue;
+      count[key] = (count[key] || 0) + 1;   // 1冊1票（順位による重み付けはしない）
+      if (!label[key]) label[key] = title;
+    }
+  });
+  return Object.keys(count).sort((a, b) => count[b] - count[a]).slice(0, n).map(k => ({ title: label[k], count: count[k] }));
+}
+
+/**
+ * 今月のお題の有効な票：同じ匿名IDの同じお題は、いちばん新しい回答の1票だけ（匿名IDのない回答は1行1票）。
+ * @return {Array<{ts:Date, id:string, key:string, title:string, note:string, place:string, from:string}>}
+ */
+function odaiVotes_() {
+  const rows = sheet_("odai_answers", ODAI_HEADERS).getDataRange().getValues().slice(1).filter(r => r[1] && r[4]);
+  const latest = {}, list = [];
+  rows.forEach(r => {
+    const v = { ts: r[0], id: r[1] instanceof Date ? Utilities.formatDate(r[1], "Asia/Tokyo", "yyyy-MM") : String(r[1]), key: String(r[4]), title: String(r[3] || r[2]), note: String(r[5] || ""), place: String(r[6] || ""), from: String(r[7] || "") };
+    const aid = String(r[8] || "");
+    if (!aid) { list.push(v); return; }
+    const k = v.id + "|" + aid, p = latest[k];
+    if (!p || !(p.ts instanceof Date) || (v.ts instanceof Date && v.ts >= p.ts)) latest[k] = v;   // 行は時刻順なので、後の行で上書き
+  });
+  Object.keys(latest).forEach(k => list.push(latest[k]));
+  return list;
+}
+
+/** お題IDごとに、本の票数と一言（票の多い順） */
+function odaiTally_() {
+  const out = {};
+  odaiVotes_().forEach(v => {
+    const by = out[v.id] = out[v.id] || {};
+    const x = by[v.key] = by[v.key] || { title: v.title, count: 0, notes: [] };
+    x.count++;
+    if (v.note) x.notes.push(v.note);
+  });
+  const res = {};
+  Object.keys(out).forEach(id => { res[id] = Object.keys(out[id]).map(k => out[id][k]).sort((a, b) => b.count - a.count); });
+  return res;
+}
+
+/** 「odai」シートを作り直す：お題ごとの順位・本・票数・一言（28日の投稿用） */
+function refreshOdaiSheet() {
+  const t = odaiTally_();
+  const sh = sheet_("odai"); sh.clear();
+  const out = [["お題ID（投稿月）", "お題", "順位", "本", "票数", "一言（「／」区切り）"]];
+  Object.keys(t).sort().reverse().forEach(id => {
+    let rank = 0, prev = -1;
+    t[id].forEach((x, i) => { if (x.count !== prev) { rank = i + 1; prev = x.count; } out.push([id, ODAI_TITLES[id] || "", rank, x.title, x.count, x.notes.join(" ／ ")]); });
+  });
+  sh.getRange(1, 1, out.length, 1).setNumberFormat("@");
+  sh.getRange(1, 1, out.length, 6).setValues(out.map(r => r.map(v => typeof v === "number" ? v : safe_(v, 2000))));
+}
+
+/** スプレッドシートの「ranking」シートを作り直す（月1の投稿ネタ用。手動実行またはトリガーで） */
+function refreshRankingSheet() {
+  const list = buildRanking_(50);
+  const sh = sheet_("ranking");
+  sh.clear();
+  sh.appendRow(["順位", "作品", "票数", "集計日時"]);
+  list.forEach((x, i) => sh.appendRow([i + 1, x.title, x.count, new Date()]));
+}
+
+/**
+ * 月次レポート：先月（実行日が月初の場合）または指定月の回答を集計し、「report_YYYY-MM」シートを作る。
+ * そのまま投稿ネタに使えるよう、割合の上位と一文の例も書き出す。
+ * 手動実行するか、setupMonthlyTrigger() を一度実行すると毎月1日に自動で作られる。
+ * @param {string=} ym 集計したい月（"2026-11" の形）。省略すると先月
+ */
+function monthlyReport(ym) {
+  const now = new Date();
+  if (typeof ym !== "string") ym = "";   // トリガーから呼ばれたときはイベント情報が入るので無視する
+  if (!ym) { const d = new Date(now.getFullYear(), now.getMonth() - 1, 1); ym = Utilities.formatDate(d, "Asia/Tokyo", "yyyy-MM"); }
+  const rows = sheet_("responses", RESP_HEADERS).getDataRange().getValues().slice(1)
+    .filter(r => r[0] instanceof Date && Utilities.formatDate(r[0], "Asia/Tokyo", "yyyy-MM") === ym);
+  const sh = sheet_("report_" + ym); sh.clear();
+  sh.appendRow(["謎本診断 月次レポート", ym, "回答数", rows.length]);
+  if (!rows.length) { sh.appendRow(["この月の回答はまだありません"]); return; }
+  const tally = (col, map) => {
+    const c = {}; rows.forEach(r => { const k = String(r[col] || ""); if (k) c[k] = (c[k] || 0) + 1; });
+    return Object.keys(c).sort((a, b) => c[b] - c[a]).map(k => [map && map[k] || k, c[k], Math.round(c[k] / rows.length * 100) + "%"]);
+  };
+  const block = (title, list) => { sh.appendRow([]); sh.appendRow([title, "人数", "割合"]); list.forEach(x => sh.appendRow(x)); return list; };
+  const feel = block("読み終えたときになっていたい気分", tally(2, LABELS.feel));
+  block("ミステリーの経験", tally(1, LABELS.level));
+  block("残酷描写への耐性", tally(4, LABELS.gore));
+  block("今週の1問（設問=答え）", tally(6));
+  // 好きな本・おすすめされた本
+  const cnt = (cols) => { const c = {}; rows.forEach(r => cols.forEach(i => { const t = String(r[i] || ""); if (t) c[t] = (c[t] || 0) + 1; })); return Object.keys(c).sort((a, b) => c[b] - c[a]).slice(0, 10).map(k => [k, c[k], ""]); };
+  const fav = block("よく挙がった「面白かったミステリー」TOP10", cnt([BEST_COL, BEST_COL + 1, BEST_COL + 2]));
+  block("よくおすすめされた本TOP10", cnt([REC_COL, REC_COL + 1, REC_COL + 2]));
+  // 診断の完了率と、購入ボタンのクリック
+  const inMonth = r => r[0] instanceof Date && Utilities.formatDate(r[0], "Asia/Tokyo", "yyyy-MM") === ym;
+  const starts = sheet_("starts", ["日時"]).getDataRange().getValues().slice(1).filter(inMonth).length;
+  const clicks = sheet_("clicks", CLICK_HEADERS).getDataRange().getValues().slice(1).filter(inMonth);
+  const pct = (a, b) => b ? Math.round(a / b * 1000) / 10 + "%" : "—";
+  const amz = clicks.filter(r => r[1] === "amazon"), aud = clicks.filter(r => r[1] === "audible");
+  sh.appendRow([]); sh.appendRow(["診断と購入ボタン", "件数", "割合"]);
+  sh.appendRow(["「依頼をはじめる」を押した", starts, ""]);
+  sh.appendRow(["最後まで答えた（結果を見た）", rows.length, "開始の " + pct(rows.length, starts)]);
+  sh.appendRow(["Amazonボタンのクリック", amz.length, "診断1回あたり " + pct(amz.length, rows.length)]);
+  sh.appendRow(["  うち結果画面", amz.filter(r => r[4] === "result").length, ""]);
+  sh.appendRow(["  うち本棚の詳細", amz.filter(r => r[4] === "detail").length, ""]);
+  sh.appendRow(["楽天ブックスボタンのクリック", clicks.filter(r => r[1] === "rakuten").length, ""]);
+  sh.appendRow(["Audibleボタンのクリック", aud.length, ""]);
+  sh.appendRow(["ストーリーズ画像を作った", clicks.filter(r => r[1] === "story").length, ""]);
+  sh.appendRow(["「もう読んだ」で入れ替えた", clicks.filter(r => r[1] === "read_swap").length, ""]);
+  const byBook = {}; amz.forEach(r => { const k = String(r[3] || r[2]); byBook[k] = (byBook[k] || 0) + 1; });
+  block("Amazonでよく押された本TOP10", Object.keys(byBook).sort((a, b) => byBook[b] - byBook[a]).slice(0, 10).map(k => [k, byBook[k], ""]));
+  // 投稿ネタの一文
+  sh.appendRow([]); sh.appendRow(["投稿ネタの例"]);
+  if (feel[0]) sh.appendRow([`謎本診断をした人の${feel[0][2]}が「${feel[0][0]}」と回答！`]);
+  if (fav[0]) sh.appendRow([`みんなが選んだ面白かったミステリー1位は『${fav[0][0]}』`]);
+}
+
+/** 毎月1日の朝に monthlyReport を自動実行するトリガーを作る（一度だけ実行） */
+function setupMonthlyTrigger() {
+  ScriptApp.getProjectTriggers().filter(t => t.getHandlerFunction() === "monthlyReport").forEach(t => ScriptApp.deleteTrigger(t));
+  ScriptApp.newTrigger("monthlyReport").timeBased().onMonthDay(1).atHour(8).create();
+}
+
+function out_(s) { return ContentService.createTextOutput(s); }
+function json_(o) { return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON); }
+
+/** 書影の取得を試す（初回はここを実行して、外部への接続を許可する） */
+function testCover() {
+  const r = UrlFetchApp.fetch("https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/0123/9784167110123_1_35.jpg?_ex=300x300");
+  Logger.log(r.getResponseCode() + " " + r.getBlob().getBytes().length + " bytes");
+}
+
+/**
+ * 月次レポート（Claudeのダッシュボード）用のまとめ表
+ * スプレッドシートの「いちばん左のシート」に、月ごとの集計を縦長の表で書き出す。
+ * ダッシュボードはこのシートだけを読む（Googleドライブの書き出しは先頭シートだけが対象のため）。
+ *
+ * 使い方（最初の1回だけ）
+ *  1. 関数 setupDashboardTrigger を選んで「実行」→ 権限を許可
+ *     （以後1時間ごとに自動で更新。すぐ作りたいときは refreshDashboardSheet を実行）
+ *
+ * 列：月 / 区分 / 項目 / 件数
+ *   月 … "2026-11" の形。全期間の合計は "累計"
+ *   今月のお題は、月の欄にお題ID（＝投稿する月）を入れ、区分を「お題：（お題の文）」にする（同じ人の重複は除いた票数）
+ */
+const DASH_SHEET = "dashboard";
+
+function refreshDashboardSheet() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  // 先頭シートを dashboard にする（なければ作って左端に移動）
+  let sh = ss.getSheetByName(DASH_SHEET);
+  if (!sh) {
+    const first = ss.getSheets()[0];
+    if (first && first.getLastRow() === 0 && first.getName() !== "responses") { first.setName(DASH_SHEET); sh = first; }
+    else sh = ss.insertSheet(DASH_SHEET, 0);
+  }
+  if (ss.getSheets()[0].getName() !== DASH_SHEET) { ss.setActiveSheet(sh); ss.moveActiveSheet(1); }
+
+  const ymOf = d => d instanceof Date ? Utilities.formatDate(d, "Asia/Tokyo", "yyyy-MM") : "";
+  const resp = sheet_("responses", RESP_HEADERS).getDataRange().getValues().slice(1).filter(r => r[0] instanceof Date);
+  const starts = sheet_("starts", ["日時"]).getDataRange().getValues().slice(1).filter(r => r[0] instanceof Date);
+  const clicks = sheet_("clicks", CLICK_HEADERS).getDataRange().getValues().slice(1).filter(r => r[0] instanceof Date);
+
+  const months = {};
+  [resp, starts, clicks].forEach(list => list.forEach(r => months[ymOf(r[0])] = true));
+  const keys = Object.keys(months).filter(Boolean).sort().concat(["累計"]);
+  const out = [["月", "区分", "項目", "件数"]];
+
+  keys.forEach(ym => {
+    const pick = list => ym === "累計" ? list : list.filter(r => ymOf(r[0]) === ym);
+    const R = pick(resp), S = pick(starts), C = pick(clicks);
+    const add = (sec, item, n) => { if (n) out.push([ym, sec, item, n]); };
+    const tally = (sec, rows, col, map) => {
+      const c = {}; rows.forEach(r => { const k = String(r[col] || ""); if (k) c[k] = (c[k] || 0) + 1; });
+      Object.keys(c).sort((a, b) => c[b] - c[a]).forEach(k => add(sec, (map && map[k]) || k, c[k]));
+    };
+    const top = (sec, rows, cols, n) => {
+      const c = {}; rows.forEach(r => cols.forEach(i => { const t = String(r[i] || ""); if (t) c[t] = (c[t] || 0) + 1; }));
+      Object.keys(c).sort((a, b) => c[b] - c[a]).slice(0, n).forEach(k => add(sec, k, c[k]));
+    };
+    // 基本の数
+    out.push([ym, "合計", "診断を始めた", S.length]);
+    out.push([ym, "合計", "最後まで答えた", R.length]);
+    ["amazon", "rakuten", "audible", "story", "read_swap"].forEach(k =>
+      out.push([ym, "合計", "クリック_" + k, C.filter(r => r[1] === k).length]));
+    // 回答の内訳
+    tally("読後の気分", R, 2, LABELS.feel);
+    tally("経験", R, 1, LABELS.level);
+    tally("残酷描写", R, 4, LABELS.gore);
+    tally("今週の1問", R, 6);
+    top("好きなミステリー", R, [BEST_COL, BEST_COL + 1, BEST_COL + 2], 10);
+    top("おすすめされた本", R, [REC_COL, REC_COL + 1, REC_COL + 2], 10);
+    // Amazonでよく押された本
+    const az = {}; C.filter(r => r[1] === "amazon").forEach(r => { const k = String(r[3] || r[2]); if (k) az[k] = (az[k] || 0) + 1; });
+    Object.keys(az).sort((a, b) => az[b] - az[a]).slice(0, 10).forEach(k => add("Amazonで押された本", k, az[k]));
+  });
+
+  // 今月のお題：お題ID（投稿する月）ごとに、回答した人数（同じ人の重複を除く）・回答した場所・流入元・本の票数
+  const votes = odaiVotes_(), ids = {};
+  votes.forEach(v => ids[v.id] = true);
+  Object.keys(ids).sort().forEach(id => {
+    const V = votes.filter(v => v.id === id), sec = "お題：" + (ODAI_TITLES[id] || id);
+    out.push([id, sec, "回答した人数", V.length]);
+    const by = (f, label) => { const c = {}; V.forEach(v => { const k = f(v); c[k] = (c[k] || 0) + 1; }); Object.keys(c).sort((x, y) => c[y] - c[x]).forEach(k => out.push([id, sec, label + k, c[k]])); };
+    by(v => PLACE_LABEL[v.place] || v.place || "不明", "回答した場所_");
+    by(v => v.from || "（なし）", "流入元_");
+  });
+  const od = odaiTally_();
+  Object.keys(od).sort().forEach(id => od[id].slice(0, 20).forEach(x => out.push([id, "お題の票：" + (ODAI_TITLES[id] || id), x.title, x.count])));
+
+  sh.clear();
+  sh.getRange(1, 1, out.length, 3).setNumberFormat("@");   // "2026-11" が日付に変わらないよう文字として保存
+  sh.getRange(1, 1, out.length, 4).setValues(out.map(r => r.map(v => typeof v === "number" ? v : safe_(v, 100))));
+  refreshOdaiSheet();
+}
+
+/** 1時間ごとに refreshDashboardSheet を動かすトリガーを作る（一度だけ実行） */
+function setupDashboardTrigger() {
+  ScriptApp.getProjectTriggers().filter(t => t.getHandlerFunction() === "refreshDashboardSheet").forEach(t => ScriptApp.deleteTrigger(t));
+  ScriptApp.newTrigger("refreshDashboardSheet").timeBased().everyHours(1).create();
+  refreshDashboardSheet();
+}
