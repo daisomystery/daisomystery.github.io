@@ -86,6 +86,8 @@ button.plate { background: none; border: 0; padding: 4px 0; cursor: pointer; tex
 .tabs { display: flex; gap: 4px }
 .tab { background: none; border: 0; border-bottom: 1px solid transparent; color: #cdbf9f; padding: 8px 10px; cursor: pointer; font-size: 14px }
 .tab[aria-current="page"] { border-bottom-color: var(--gold-bright); color: var(--on-dark) }
+a.tab { text-decoration: none; display: inline-flex; align-items: center }
+@media (max-width: 420px) { .tabs { gap: 0 } .tab { padding: 8px 7px; font-size: 13px } .top-in { gap: 8px } }
 
 .wrap { max-width: 640px; margin: 0 auto; padding-block: 24px 48px;
   padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 22px }
@@ -430,6 +432,7 @@ dialog.detail .card { max-height: calc(100vh - 48px); max-height: calc(100dvh - 
   <nav class="tabs" aria-label="ページ">
     <button class="tab" id="tabQuiz" aria-current="page">診断</button>
     <button class="tab" id="tabShelf">だいそうの本棚</button>
+    <a class="tab" id="tabOdai" href="odai/">今月のお題</a>
   </nav>
 </div></header>
 <main class="wrap" id="app" aria-live="polite"></main>
