@@ -434,6 +434,7 @@ dialog.detail .card { max-height: calc(100vh - 48px); max-height: calc(100dvh - 
     <button class="tab" id="tabQuiz" aria-current="page">診断</button>
     <button class="tab" id="tabShelf">だいそうの本棚</button>
     <a class="tab" id="tabOdai" href="odai/">今月のお題</a>
+    <a class="tab" id="tabRank" href="ranking/">ランキング</a>
   </nav>
 </div></header>
 <main class="wrap" id="app" aria-live="polite"></main>
@@ -2082,6 +2083,7 @@ function loadRanking() {
 }
 
 if (location.hash === "#shelf") setView("shelf");
+else if (/^#book=[0-9a-f]{12}$/.test(location.hash) && BOOKS.some(b => b.id === location.hash.slice(6))) { const id = location.hash.slice(6); setView("shelf"); setTimeout(() => openDetail(id), 60) }   // ランキングページの「本棚で見る」
 else if (restoreState()) { S.recs ? renderResult() : renderStep() }   // 読み込み直したときは続きから
 else renderIntro();
 </script>
