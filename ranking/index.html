@@ -520,7 +520,7 @@ const annYear = (r, y) => RMAP[r].unit === "版" ? y - 1 : y;   // 発表した�
 const READ_KEY = "nazobon_rank_read";
 let MY = new Set(); try { MY = new Set(JSON.parse(localStorage.getItem(READ_KEY) || "[]")) } catch (e) {}
 const saveMy = () => { try { localStorage.setItem(READ_KEY, JSON.stringify([...MY])) } catch (e) {} };
-const ST = (() => { let v = {}; try { v = JSON.parse(sessionStorage.getItem("nazobon_rank_view") || "{}") } catch (e) {} return { mode: ["award", "birth", "author"].includes(v.mode) && (v.mode !== "author" || v.au) ? v.mode : "rank", aw: AMAP[v.aw] ? v.aw : "kyokai", view: v.view || "year", r: RMAP[v.r] ? v.r : "kono", y: v.y || null, by: v.by || 2005, au: v.au || "", back: v.back || "rank" } })();
+const ST = (() => { let v = {}; try { v = JSON.parse(sessionStorage.getItem("nazobon_rank_view") || "{}") } catch (e) {} return { mode: ["award", "author"].includes(v.mode) && (v.mode !== "author" || v.au) ? v.mode : "rank", aw: AMAP[v.aw] ? v.aw : "kyokai", view: v.view || "year", r: RMAP[v.r] ? v.r : "kono", y: v.y || null, by: v.by || 2005, au: v.au || "", back: v.back || "rank" } })();
 const saveST = () => { try { sessionStorage.setItem("nazobon_rank_view", JSON.stringify(ST)) } catch (e) {} };
 if (!ST.y || !yearsOf(ST.r).includes(ST.y)) ST.y = yearsOf(ST.r)[0];
 
@@ -556,8 +556,7 @@ function tally() {
 function controls() {
   const ys = yearsOf(ST.r), i = ys.indexOf(ST.y);
   return `<div class="rk-chips" role="group" aria-label="ランキング">${RK.rankings.map(x => `<button class="rk-chip" data-r="${x.k}" aria-pressed="${ST.mode !== "birth" && ST.view === "year" && x.k === ST.r}">${esc(x.name)}</button>`).join("")}
-      <button class="rk-chip" data-v="top" aria-pressed="${ST.mode !== "birth" && ST.view === "top"}">歴代1位を一覧で</button>
-      <button class="rk-chip" data-v="birth" aria-pressed="${ST.mode === "birth"}">生まれ年で探す</button></div>
+      <button class="rk-chip" data-v="top" aria-pressed="${ST.mode !== "birth" && ST.view === "top"}">歴代1位を一覧で</button></div>
     ${ST.mode !== "birth" && ST.view === "year" ? `<div class="rk-year"><button id="newer" ${i <= 0 ? "disabled" : ""} aria-label="新しい年へ">‹ 新しい</button>
       <select id="ysel" aria-label="年">${ys.map(y => `<option value="${y}" ${y === ST.y ? "selected" : ""}>${yLabel(ST.r, y)}</option>`).join("")}</select>
       <button id="older" ${i >= ys.length - 1 ? "disabled" : ""} aria-label="古い年へ">古い ›</button></div>` : ""}`;
