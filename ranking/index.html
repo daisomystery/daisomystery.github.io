@@ -555,9 +555,10 @@ function tally() {
 
 function controls() {
   const ys = yearsOf(ST.r), i = ys.indexOf(ST.y);
-  return `<div class="rk-chips" role="group" aria-label="ランキング">${RK.rankings.map(x => `<button class="rk-chip" data-r="${x.k}" aria-pressed="${ST.view === "year" && x.k === ST.r}">${esc(x.name)}</button>`).join("")}
-      <button class="rk-chip" data-v="top" aria-pressed="${ST.view === "top"}">歴代1位を一覧で</button></div>
-    ${ST.view === "year" ? `<div class="rk-year"><button id="newer" ${i <= 0 ? "disabled" : ""} aria-label="新しい年へ">‹ 新しい</button>
+  return `<div class="rk-chips" role="group" aria-label="ランキング">${RK.rankings.map(x => `<button class="rk-chip" data-r="${x.k}" aria-pressed="${ST.mode !== "birth" && ST.view === "year" && x.k === ST.r}">${esc(x.name)}</button>`).join("")}
+      <button class="rk-chip" data-v="top" aria-pressed="${ST.mode !== "birth" && ST.view === "top"}">歴代1位を一覧で</button>
+      <button class="rk-chip" data-v="birth" aria-pressed="${ST.mode === "birth"}">生まれ年で探す</button></div>
+    ${ST.mode !== "birth" && ST.view === "year" ? `<div class="rk-year"><button id="newer" ${i <= 0 ? "disabled" : ""} aria-label="新しい年へ">‹ 新しい</button>
       <select id="ysel" aria-label="年">${ys.map(y => `<option value="${y}" ${y === ST.y ? "selected" : ""}>${yLabel(ST.r, y)}</option>`).join("")}</select>
       <button id="older" ${i >= ys.length - 1 ? "disabled" : ""} aria-label="古い年へ">古い ›</button></div>` : ""}`;
 }
@@ -783,15 +784,17 @@ function render() {
   app.innerHTML = `<section class="card screen"><div class="card-head"><span class="latin">Mystery Rankings</span><span class="num">${{ award: "主な受賞作", birth: "生まれ年", author: "作家" }[ST.mode] || "国内4大ランキング"}</span></div>
     <div class="card-body rk-head" style="display:grid;gap:14px">
       <h2>歴代ミステリーランキング・受賞作</h2>
-      <div class="rk-mode" role="tablist" aria-label="表示"><button role="tab" class="rk-mode-b" data-mode="rank" aria-selected="${ST.mode === "rank"}">ランキング</button><button role="tab" class="rk-mode-b" data-mode="award" aria-selected="${ST.mode === "award"}">受賞作</button><button role="tab" class="rk-mode-b" data-mode="birth" aria-selected="${ST.mode === "birth"}">生まれ年</button></div>
+      <div class="rk-mode" role="tablist" aria-label="表示"><button role="tab" class="rk-mode-b" data-mode="rank" aria-selected="${ST.mode === "rank" || ST.mode === "birth"}">ランキング</button><button role="tab" class="rk-mode-b" data-mode="award" aria-selected="${ST.mode === "award"}">受賞作</button></div>
       <p class="hint">${{ award: "国内の主なミステリー賞6つの、歴代の受賞作です（日本推理作家協会賞・本格ミステリ大賞は候補作も）。", birth: "生まれた年を選ぶと、その年に発表されたランキングの1位と、賞の受賞作がわかります。", author: "作家ごとに、ランキング・賞に入った作品をまとめました。" }[ST.mode] || "国内の主なミステリーランキング4つの、歴代1位〜10位です。"}作家名を押すと、その作家の作品がまとめて見られます。だいそうが読んだ本には一言を付けています。読んだ本に印を付けると、あなたの読破数がわかります（印はこの端末だけに保存されます）。</p>
-      ${ST.mode === "award" ? awControls() + renderAward() : ST.mode === "birth" ? renderBirth() : ST.mode === "author" ? renderAuthor() : controls() + (ST.view === "top" ? renderTop() : renderYear())}
+      ${ST.mode === "award" ? awControls() + renderAward() : ST.mode === "birth" ? controls() + renderBirth() : ST.mode === "author" ? renderAuthor() : controls() + (ST.view === "top" ? renderTop() : renderYear())}
       <p class="rk-note">順位・受賞は各ランキング・各賞の発表をもとに当サイトがまとめたものです。各ランキング・賞の名称は、それぞれの主催者の商標です。誤りにお気づきの場合は、Instagram（@daiso_mysterylover）のDMでお知らせください。</p>
     </div></section>`;
   app.querySelectorAll(".rk-story").forEach(b => b.onclick = () => openReadStory(b.dataset.set));
   app.querySelectorAll(".rk-mode-b[data-mode]").forEach(b => b.onclick = () => { ST.mode = b.dataset.mode; render(); });
   app.querySelectorAll(".aw-chip").forEach(b => b.onclick = () => { ST.aw = b.dataset.aw; render(); window.scrollTo({ top: 0 }) });
   app.querySelectorAll(".rk-chip:not(.aw-chip)").forEach(b => b.onclick = () => {
+    if (b.dataset.v === "birth") { ST.mode = "birth"; render(); return }
+    ST.mode = "rank";
     if (b.dataset.v) ST.view = "top"; else { ST.view = "year"; if (ST.r !== b.dataset.r) { ST.r = b.dataset.r; ST.y = yearsOf(ST.r)[0] } }
     render();
   });
