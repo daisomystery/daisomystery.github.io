@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#170c0d">
+<meta name="format-detection" content="telephone=no">
+<!-- Googleアナリティクス（謎本診断） -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2RRGWKH420"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config","G-2RRGWKH420");</script>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="謎本診断">
+<meta property="og:title" content="今日のミステリー豆知識｜謎本診断">
+<meta property="og:description" content="@daiso_mysterylover のストーリーで出した2択クイズの答えと解説、つながる本を紹介します。">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:url" content="https://daisomystery.github.io/mame/">
+<meta property="og:image" content="https://daisomystery.github.io/ogp.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<link rel="canonical" href="https://daisomystery.github.io/mame/">
+<style>/* claude.ai のプレビューが付けていた基本設定を、公開版でも同じにする */
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px) }
+body { margin: 0; font: 14px/1.5 system-ui, -apple-system, sans-serif } img { max-width: 100% } [hidden] { display: none !important }</style>
+<title>今日のミステリー豆知識｜謎本診断</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2212%22%20fill%3D%22%23170c0d%22/%3E%3Cpath%20d%3D%22M10%2018c8-3%2015-2%2022%203v28c-7-5-14-6-22-3z%22%20fill%3D%22none%22%20stroke%3D%22%23c9a35a%22%20stroke-width%3D%223%22%20stroke-linejoin%3D%22round%22/%3E%3Cpath%20d%3D%22M54%2018c-8-3-15-2-22%203v28c7-5%2014-6%2022-3z%22%20fill%3D%22none%22%20stroke%3D%22%23c9a35a%22%20stroke-width%3D%223%22%20stroke-linejoin%3D%22round%22/%3E%3Cpath%20d%3D%22M42%2044v10l3-2%203%202V44%22%20fill%3D%22%23f2b84b%22/%3E%3C/svg%3E">
+<meta name="description" content="いくつかの質問に答えるだけで、ミステリー好きの本棚から今のあなたに合う3冊を選びます。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;700;800&family=Cinzel:wght@500;700&family=Cormorant+Garamond:ital,wght@0,600;1,500&family=Klee+One:wght@600&display=swap">
+<style>
+/* layout: 19世紀ロンドン、ガス灯の書斎。臙脂の縞の壁紙に真鍮の額縁、質問と結果は羊皮紙のカード、本棚は木の書架に革装の本が並ぶ */
+:root {
+  --wall: #2a1517;        /* 臙脂の壁紙 */
+  --wall-line: rgba(201,163,90,.10);
+  --head: #170c0d;        /* 上部の帯 */
+  --parch: #f1e6cc;       /* 羊皮紙のカード */
+  --parch-deep: #e6d6b3;
+  --ink: #2a1517;
+  --ink-soft: #6b5442;
+  --rule: #d2bf96;
+  --oxblood: #8e1f22;     /* 封蝋の赤 */
+  --oxblood-soft: #f0d5cc;
+  --gold: #a8843f;        /* 真鍮 */
+  --gold-bright: #c9a35a;
+  --flame: #f2b84b;       /* ガス灯の炎 */
+  --wood: #5a3820;
+  --wood-light: #7a4e2c;
+  --pop-paper: #fbf5e4; --pop-ink: #2b2118; --pop-red: #8e1f22; --pop-tape: rgba(230,214,160,.85);
+  --shelf-back: #2b1a10;
+  --on-dark: #f1e6cc;
+  --f-display: "Shippori Mincho B1", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --f-body: "Shippori Mincho B1", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --f-latin: "Cormorant Garamond", "Times New Roman", serif;
+  --f-caps: "Cinzel", "Times New Roman", serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --wall: #1e0f10; --head: #110809; --parch: #241a17; --parch-deep: #2e221d; --ink: #f1e6cc; --ink-soft: #c4b291; --rule: #4a3a2c;
+  --oxblood: #e08a86; --oxblood-soft: #3d2220; --gold: #c9a35a; --gold-bright: #d6b46e; --wood: #3a2415; --wood-light: #573823; --pop-paper: #e9e0c8; --pop-ink: #241b13; --pop-red: #8e1f22; --pop-tape: rgba(200,184,130,.8);
+  --shelf-back: #160e0a; --on-dark: #f1e6cc; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --wall: #1e0f10; --head: #110809; --parch: #241a17; --parch-deep: #2e221d; --ink: #f1e6cc; --ink-soft: #c4b291; --rule: #4a3a2c;
+  --oxblood: #e08a86; --oxblood-soft: #3d2220; --gold: #c9a35a; --gold-bright: #d6b46e; --wood: #3a2415; --wood-light: #573823; --pop-paper: #e9e0c8; --pop-ink: #241b13; --pop-red: #8e1f22; --pop-tape: rgba(200,184,130,.8);
+  --shelf-back: #160e0a; --on-dark: #f1e6cc; color-scheme: dark }
+
+* { box-sizing: border-box; font-variant-numeric: lining-nums }
+body { background: var(--wall); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.75;
+  background-image: repeating-linear-gradient(90deg, transparent 0 22px, var(--wall-line) 22px 23px, transparent 23px 26px, var(--wall-line) 26px 27px) }
+/* 背景：革装の書架（暗く落として控えめに） */
+body { background-color: #1b0f0e; background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22420%22%20height%3D%22210%22%3E%3Crect%20width%3D%22420%22%20height%3D%22210%22%20fill%3D%22%231b0f0e%22/%3E%3Crect%20x%3D%226%22%20y%3D%2218%22%20width%3D%2215%22%20height%3D%22176%22%20rx%3D%221.5%22%20fill%3D%22%231f3b2c%22/%3E%3Crect%20x%3D%226%22%20y%3D%2218%22%20width%3D%223%22%20height%3D%22176%22%20fill%3D%22%23000%22%20opacity%3D%22.28%22/%3E%3Crect%20x%3D%228%22%20y%3D%2230%22%20width%3D%2211%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%228%22%20y%3D%2234%22%20width%3D%2211%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%228%22%20y%3D%22176%22%20width%3D%2211%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%228%22%20y%3D%22180%22%20width%3D%2211%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%2221%22%20y%3D%2226%22%20width%3D%2225%22%20height%3D%22168%22%20rx%3D%221.5%22%20fill%3D%22%236b3a20%22/%3E%3Crect%20x%3D%2221%22%20y%3D%2226%22%20width%3D%223%22%20height%3D%22168%22%20fill%3D%22%23000%22%20opacity%3D%22.28%22/%3E%3Crect%20x%3D%2223%22%20y%3D%2238%22%20width%3D%2221%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%2223%22%20y%3D%2242%22%20width%3D%2221%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%2223%22%20y%3D%22176%22%20width%3D%2221%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%2223%22%20y%3D%22180%22%20width%3D%2221%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%2224%22%20y%3D%2279.75999999999999%22%20width%3D%2219%22%20height%3D%2236.96%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.08%22/%3E%3Crect%20x%3D%2247%22%20y%3D%2253%22%20width%3D%2220%22%20height%3D%22141%22%20rx%3D%221.5%22%20fill%3D%22%236b3a20%22/%3E%3Crect%20x%3D%2247%22%20y%3D%2253%22%20width%3D%223%22%20height%3D%22141%22%20fill%3D%22%23000%22%20opacity%3D%22.28%22/%3E%3Crect%20x%3D%2249%22%20y%3D%2265%22%20width%3D%2216%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%2249%22%20y%3D%2269%22%20width%3D%2216%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%2249%22%20y%3D%22176%22%20width%3D%2216%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%2249%22%20y%3D%22180%22%20width%3D%2216%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%2268%22%20y%3D%2226%22%20width%3D%2224%22%20height%3D%22168%22%20rx%3D%221.5%22%20fill%3D%22%236a4a23%22/%3E%3Crect%20x%3D%2268%22%20y%3D%2226%22%20width%3D%223%22%20height%3D%22168%22%20fill%3D%22%23000%22%20opacity%3D%22.28%22/%3E%3Crect%20x%3D%2270%22%20y%3D%2238%22%20width%3D%2220%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%2270%22%20y%3D%2242%22%20width%3D%2220%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%2270%22%20y%3D%22176%22%20width%3D%2220%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%2270%22%20y%3D%22180%22%20width%3D%2220%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%2271%22%20y%3D%2279.75999999999999%22%20width%3D%2218%22%20height%3D%2236.96%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.08%22/%3E%3Crect%20x%3D%22107%22%20y%3D%2230%22%20width%3D%2213%22%20height%3D%22164%22%20rx%3D%221.5%22%20fill%3D%22%236b3a20%22/%3E%3Crect%20x%3D%22107%22%20y%3D%2230%22%20width%3D%223%22%20height%3D%22164%22%20fill%3D%22%23000%22%20opacity%3D%22.28%22/%3E%3Crect%20x%3D%22109%22%20y%3D%2242%22%20width%3D%229%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22109%22%20y%3D%2246%22%20width%3D%229%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22109%22%20y%3D%22176%22%20width%3D%229%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22109%22%20y%3D%22180%22%20width%3D%229%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22110%22%20y%3D%2282.48%22%20width%3D%227%22%20height%3D%2236.08%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.08%22/%3E%3Crect%20x%3D%22121%22%20y%3D%2226%22%20width%3D%2225%22%20height%3D%22168%22%20rx%3D%221.5%22%20fill%3D%22%2324302a%22/%3E%3Crect%20x%3D%22121%22%20y%3D%2226%22%20width%3D%223%22%20height%3D%22168%22%20fill%3D%22%23000%22%20opacity%3D%22.28%22/%3E%3Crect%20x%3D%22123%22%20y%3D%2238%22%20width%3D%2221%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22123%22%20y%3D%2242%22%20width%3D%2221%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22123%22%20y%3D%22176%22%20width%3D%2221%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22123%22%20y%3D%22180%22%20width%3D%2221%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22147%22%20y%3D%2240%22%20width%3D%2223%22%20height%3D%22154%22%20rx%3D%221.5%22%20fill%3D%22%232a2420%22/%3E%3Crect%20x%3D%22147%22%20y%3D%2240%22%20width%3D%223%22%20height%3D%22154%22%20fill%3D%22%23000%22%20opacity%3D%22.28%22/%3E%3Crect%20x%3D%22149%22%20y%3D%2252%22%20width%3D%2219%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22149%22%20y%3D%2256%22%20width%3D%2219%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22149%22%20y%3D%22176%22%20width%3D%2219%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22149%22%20y%3D%22180%22%20width%3D%2219%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22150%22%20y%3D%2289.28%22%20width%3D%2217%22%20height%3D%2233.88%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.08%22/%3E%3Crect%20x%3D%22170%22%20y%3D%2219%22%20width%3D%2226%22%20height%3D%22175%22%20rx%3D%221.5%22%20fill%3D%22%231f3b2c%22/%3E%3Crect%20x%3D%22170%22%20y%3D%2219%22%20width%3D%223%22%20height%3D%22175%22%20fill%3D%22%23000%22%20opacity%3D%22.28%22/%3E%3Crect%20x%3D%22172%22%20y%3D%2231%22%20width%3D%2222%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22172%22%20y%3D%2235%22%20width%3D%2222%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22172%22%20y%3D%22176%22%20width%3D%2222%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22172%22%20y%3D%22180%22%20width%3D%2222%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22198%22%20y%3D%2233%22%20width%3D%2214%22%20height%3D%22161%22%20rx%3D%221.5%22%20fill%3D%22%2324302a%22/%3E%3Crect%20x%3D%22198%22%20y%3D%2233%22%20width%3D%223%22%20height%3D%22161%22%20fill%3D%22%23000%22%20opacity%3D%22.28%22/%3E%3Crect%20x%3D%22200%22%20y%3D%2245%22%20width%3D%2210%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22200%22%20y%3D%2249%22%20width%3D%2210%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22200%22%20y%3D%22176%22%20width%3D%2210%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22200%22%20y%3D%22180%22%20width%3D%2210%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22201%22%20y%3D%2284.52000000000001%22%20width%3D%228%22%20height%3D%2235.42%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.08%22/%3E%3Crect%20x%3D%22212%22%20y%3D%2212%22%20width%3D%2221%22%20height%3D%22182%22%20rx%3D%221.5%22%20fill%3D%22%232a2420%22/%3E%3Crect%20x%3D%22212%22%20y%3D%2212%22%20width%3D%223%22%20height%3D%22182%22%20fill%3D%22%23000%22%20opacity%3D%22.28%22/%3E%3Crect%20x%3D%22214%22%20y%3D%2224%22%20width%3D%2217%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22214%22%20y%3D%2228%22%20width%3D%2217%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22214%22%20y%3D%22176%22%20width%3D%2217%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22214%22%20y%3D%22180%22%20width%3D%2217%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22215%22%20y%3D%2270.24000000000001%22%20width%3D%2215%22%20height%3D%2240.04%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.08%22/%3E%3Crect%20x%3D%22233%22%20y%3D%2222%22%20width%3D%2226%22%20height%3D%22172%22%20rx%3D%221.5%22%20fill%3D%22%235b1f24%22/%3E%3Crect%20x%3D%22233%22%20y%3D%2222%22%20width%3D%223%22%20height%3D%22172%22%20fill%3D%22%23000%22%20opacity%3D%22.28%22/%3E%3Crect%20x%3D%22235%22%20y%3D%2234%22%20width%3D%2222%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22235%22%20y%3D%2238%22%20width%3D%2222%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22235%22%20y%3D%22176%22%20width%3D%2222%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22235%22%20y%3D%22180%22%20width%3D%2222%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22259%22%20y%3D%2212%22%20width%3D%2219%22%20height%3D%22182%22%20rx%3D%221.5%22%20fill%3D%22%2324302a%22/%3E%3Crect%20x%3D%22259%22%20y%3D%2212%22%20width%3D%223%22%20height%3D%22182%22%20fill%3D%22%23000%22%20opacity%3D%22.28%22/%3E%3Crect%20x%3D%22261%22%20y%3D%2224%22%20width%3D%2215%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22261%22%20y%3D%2228%22%20width%3D%2215%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22261%22%20y%3D%22176%22%20width%3D%2215%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22261%22%20y%3D%22180%22%20width%3D%2215%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22262%22%20y%3D%2270.24000000000001%22%20width%3D%2213%22%20height%3D%2240.04%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.08%22/%3E%3Crect%20x%3D%22280%22%20y%3D%2226%22%20width%3D%2214%22%20height%3D%22168%22%20rx%3D%221.5%22%20fill%3D%22%231f3b2c%22/%3E%3Crect%20x%3D%22280%22%20y%3D%2226%22%20width%3D%223%22%20height%3D%22168%22%20fill%3D%22%23000%22%20opacity%3D%22.28%22/%3E%3Crect%20x%3D%22282%22%20y%3D%2238%22%20width%3D%2210%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22282%22%20y%3D%2242%22%20width%3D%2210%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22282%22%20y%3D%22176%22%20width%3D%2210%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22282%22%20y%3D%22180%22%20width%3D%2210%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22283%22%20y%3D%2279.75999999999999%22%20width%3D%228%22%20height%3D%2236.96%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.08%22/%3E%3Crect%20x%3D%22294%22%20y%3D%2223%22%20width%3D%2218%22%20height%3D%22171%22%20rx%3D%221.5%22%20fill%3D%22%233a1a1d%22/%3E%3Crect%20x%3D%22294%22%20y%3D%2223%22%20width%3D%223%22%20height%3D%22171%22%20fill%3D%22%23000%22%20opacity%3D%22.28%22/%3E%3Crect%20x%3D%22296%22%20y%3D%2235%22%20width%3D%2214%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22296%22%20y%3D%2239%22%20width%3D%2214%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22296%22%20y%3D%22176%22%20width%3D%2214%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22296%22%20y%3D%22180%22%20width%3D%2214%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22312%22%20y%3D%2244%22%20width%3D%2223%22%20height%3D%22150%22%20rx%3D%221.5%22%20fill%3D%22%236a4a23%22/%3E%3Crect%20x%3D%22312%22%20y%3D%2244%22%20width%3D%223%22%20height%3D%22150%22%20fill%3D%22%23000%22%20opacity%3D%22.28%22/%3E%3Crect%20x%3D%22314%22%20y%3D%2256%22%20width%3D%2219%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22314%22%20y%3D%2260%22%20width%3D%2219%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22314%22%20y%3D%22176%22%20width%3D%2219%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22314%22%20y%3D%22180%22%20width%3D%2219%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22315%22%20y%3D%2292.0%22%20width%3D%2217%22%20height%3D%2233.0%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.08%22/%3E%3Crect%20x%3D%22336%22%20y%3D%2219%22%20width%3D%2221%22%20height%3D%22175%22%20rx%3D%221.5%22%20fill%3D%22%2324302a%22/%3E%3Crect%20x%3D%22336%22%20y%3D%2219%22%20width%3D%223%22%20height%3D%22175%22%20fill%3D%22%23000%22%20opacity%3D%22.28%22/%3E%3Crect%20x%3D%22338%22%20y%3D%2231%22%20width%3D%2217%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22338%22%20y%3D%2235%22%20width%3D%2217%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22338%22%20y%3D%22176%22%20width%3D%2217%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22338%22%20y%3D%22180%22%20width%3D%2217%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22359%22%20y%3D%2237%22%20width%3D%2220%22%20height%3D%22157%22%20rx%3D%221.5%22%20fill%3D%22%235b1f24%22/%3E%3Crect%20x%3D%22359%22%20y%3D%2237%22%20width%3D%223%22%20height%3D%22157%22%20fill%3D%22%23000%22%20opacity%3D%22.28%22/%3E%3Crect%20x%3D%22361%22%20y%3D%2249%22%20width%3D%2216%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22361%22%20y%3D%2253%22%20width%3D%2216%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22361%22%20y%3D%22176%22%20width%3D%2216%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22361%22%20y%3D%22180%22%20width%3D%2216%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22380%22%20y%3D%2219%22%20width%3D%2221%22%20height%3D%22175%22%20rx%3D%221.5%22%20fill%3D%22%235b1f24%22/%3E%3Crect%20x%3D%22380%22%20y%3D%2219%22%20width%3D%223%22%20height%3D%22175%22%20fill%3D%22%23000%22%20opacity%3D%22.28%22/%3E%3Crect%20x%3D%22382%22%20y%3D%2231%22%20width%3D%2217%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22382%22%20y%3D%2235%22%20width%3D%2217%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22382%22%20y%3D%22176%22%20width%3D%2217%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22382%22%20y%3D%22180%22%20width%3D%2217%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22403%22%20y%3D%2219%22%20width%3D%2222%22%20height%3D%22175%22%20rx%3D%221.5%22%20fill%3D%22%2324302a%22/%3E%3Crect%20x%3D%22403%22%20y%3D%2219%22%20width%3D%223%22%20height%3D%22175%22%20fill%3D%22%23000%22%20opacity%3D%22.28%22/%3E%3Crect%20x%3D%22405%22%20y%3D%2231%22%20width%3D%2218%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22405%22%20y%3D%2235%22%20width%3D%2218%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22405%22%20y%3D%22176%22%20width%3D%2218%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%22405%22%20y%3D%22180%22%20width%3D%2218%22%20height%3D%221.4%22%20fill%3D%22%23c9a35a%22%20opacity%3D%22.35%22/%3E%3Crect%20y%3D%22194%22%20width%3D%22420%22%20height%3D%2216%22%20fill%3D%22%234a2d18%22/%3E%3Crect%20y%3D%22194%22%20width%3D%22420%22%20height%3D%223%22%20fill%3D%22%236b4528%22/%3E%3Crect%20y%3D%22207%22%20width%3D%22420%22%20height%3D%223%22%20fill%3D%22%23120907%22/%3E%3Crect%20width%3D%22420%22%20height%3D%22210%22%20fill%3D%22%23140909%22%20opacity%3D%22.74%22/%3E%3C/svg%3E"); background-size: 420px 210px }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--head) }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0 }
+button { font: inherit; color: inherit }
+:focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 2px }
+.latin { font-family: var(--f-caps); font-style: normal; font-size: .8em; letter-spacing: .18em; text-transform: uppercase }
+.num { font-variant-numeric: lining-nums tabular-nums }
+.axes .v, .axes-h b { font-family: var(--f-display) !important; font-variant-numeric: lining-nums tabular-nums }
+
+/* 上部：真鍮の銘板とタブ */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--head); border-bottom: 2px solid var(--gold-bright) }
+.top-in { max-width: 640px; margin: 0 auto; padding-block: 10px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap }
+.plate { color: var(--gold-bright); font-family: var(--f-display); font-weight: 800; font-size: 1.15rem; letter-spacing: .12em; display: flex; align-items: baseline; gap: 10px }
+button.plate { background: none; border: 0; padding: 4px 0; cursor: pointer; text-align: left }
+.plate small { font-family: var(--f-caps); font-weight: 500; letter-spacing: .2em; font-size: .62rem; color: var(--on-dark); opacity: .7 }
+.tabs { display: flex; gap: 4px }
+.tab { background: none; border: 0; border-bottom: 1px solid transparent; color: #cdbf9f; padding: 8px 10px; cursor: pointer; font-size: 14px }
+.tab[aria-current="page"] { border-bottom-color: var(--gold-bright); color: var(--on-dark) }
+a.tab { text-decoration: none; display: inline-flex; align-items: center }
+@media (max-width: 420px) { .tabs { gap: 0 } .tab { padding: 8px 7px; font-size: 13px } .top-in { gap: 8px } }
+
+.wrap { max-width: 640px; margin: 0 auto; padding-block: 24px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 22px }
+
+/* 目録カード */
+.card { background: var(--parch); position: relative; border: 2px solid var(--gold-bright); outline: 1px solid var(--gold-bright); outline-offset: 4px;
+  margin: 5px; box-shadow: 0 14px 30px -12px rgba(0,0,0,.75) }
+.card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 14px 20px 8px; font-size: 12px; color: var(--ink-soft);
+  border-bottom: 1px solid var(--gold); margin: 0 14px }
+.card-head .latin { font-size: 11px; color: var(--oxblood) }
+.card-body { padding: 18px 20px 24px; display: grid; gap: 16px; position: relative }
+
+/* 入口 */
+.hero { text-align: center; background: rgba(23,12,13,.82); color: #f1e6cc;
+  --ink: #f1e6cc; --ink-soft: #d8c8a6; --parch: rgba(23,12,13,.82); --rule: rgba(201,163,90,.45); --oxblood: #e2b97a }
+.hero .card-head { justify-content: center; border-bottom-color: rgba(201,163,90,.45) }
+.hero .card-body { justify-items: center; padding-top: 22px }
+.lamp { display: block }
+.hero .motto { font-family: var(--f-latin); font-style: italic; font-size: 1.05rem; color: #e8d6ad }
+.hero .sub b { color: var(--flame); font-weight: 700 }
+.hero .sub { line-height: 1.95; font-size: clamp(13px, 3.7vw, 15px) }
+.hero .rule { width: 60px; border-top: 1px solid var(--gold-bright) }
+.hero .eyebrow { font-family: var(--f-latin); font-style: italic; font-size: 1rem; color: var(--oxblood) }
+.hero h1 { font-size: clamp(2.5rem, 11vw, 3.2rem); font-weight: 800; letter-spacing: .12em; line-height: 1.15 }
+.hero .sub { color: var(--ink-soft); margin: 0 }
+.hero .letter { text-align: left; width: 100%; max-width: 30em; display: grid; gap: 10px; padding: 14px 16px; border-left: 2px solid var(--gold-bright); background: rgba(201,163,90,.07);
+  font-size: clamp(13px, 3.6vw, 14.5px); line-height: 1.9; color: #f1e6cc }
+.hero .letter p { margin: 0 }
+.hero .letter .seg { display: inline-block }
+.hero .letter b { color: var(--flame); font-weight: 700 }
+.hero .letter .sign { justify-self: end; font-size: .9em; color: #e8d6ad; letter-spacing: .1em }
+.hero .letter .sign::before { content: "― " }
+.count { display: flex; gap: 22px; flex-wrap: wrap; justify-content: center; font-size: 13px; color: var(--ink-soft) }
+.count span { display: inline-flex; align-items: baseline; gap: 4px }
+.count b { color: var(--ink); font-size: 1.3rem; font-family: var(--f-display); font-weight: 700; font-variant-numeric: lining-nums tabular-nums; line-height: 1 }
+
+.btn { display: inline-flex; justify-content: center; align-items: center; gap: 8px; min-height: 48px; padding: 0 22px; border-radius: 2px;
+  border: 1px solid var(--ink); background: var(--ink); color: var(--parch); font-weight: 700; cursor: pointer; text-decoration: none; letter-spacing: .04em }
+.btn.ghost { background: transparent; color: var(--ink) }
+.btn.seal { background: #8e1f22; border-color: #c4474a; color: #f7ecd3; letter-spacing: .18em; min-height: 54px; padding: 0 26px; box-shadow: 0 6px 16px -6px rgba(0,0,0,.8) }
+.btn.seal::before { content: ""; width: 20px; height: 20px; border-radius: 50%; background: #b8282c; box-shadow: inset 0 0 0 3px #8e1f22, 0 0 0 1px #d9696b; flex: none }
+.btn:active { transform: translateY(1px) }
+.btn:disabled { opacity: .45; cursor: default }
+
+/* 質問 */
+.progress { display: flex; gap: 4px }
+.progress i { flex: 1; height: 3px; background: var(--rule) }
+.progress i.on { background: var(--gold) }
+.q h2 { font-size: 1.4rem; line-height: 1.5 }
+.hint { margin: 0; color: var(--ink-soft); font-size: 13px }
+.opts { display: grid; gap: 10px }
+.opt { text-align: left; padding: 13px 16px; border: 1px solid var(--rule); border-radius: 2px; background: var(--parch); cursor: pointer;
+  display: grid; gap: 2px; transition: background .15s, border-color .15s }
+.opt b { font-weight: 700 }
+.opt span { font-size: 13px; color: var(--ink-soft) }
+.opt:hover { border-color: var(--gold) }
+.opt[aria-pressed="true"] { background: var(--parch-deep); border-color: var(--oxblood); box-shadow: inset 3px 0 0 var(--oxblood) }
+.nav { display: flex; justify-content: space-between; gap: 12px; align-items: center; flex-wrap: wrap }
+.linkbtn { background: none; border: 0; color: var(--ink-soft); text-decoration: underline; cursor: pointer; padding: 8px 0 }
+
+.ledger { display: grid; font-size: 13px; border-top: 1px solid var(--rule) }
+.ledger div { display: grid; grid-template-columns: 3em 1fr; gap: 8px; padding: 6px 0; border-bottom: 1px dotted var(--rule) }
+.ledger .latin { color: var(--oxblood) }
+
+/* ベスト入力 */
+.field { display: grid; gap: 6px }
+.field input { font: inherit; padding: 12px 14px; border: 1px solid var(--rule); border-radius: 2px; background: var(--parch); color: var(--ink); width: 100% }
+.sugs { display: grid; gap: 4px }
+.sug { text-align: left; padding: 8px 12px; border: 0; border-radius: 2px; background: var(--parch-deep); cursor: pointer }
+.sug small { color: var(--ink-soft); margin-left: 6px }
+.picked { display: grid; gap: 8px; counter-reset: best }
+.picked li { list-style: none; display: grid; grid-template-columns: 2.2em 1fr auto; align-items: center; gap: 8px; padding: 8px 10px;
+  border: 1px solid var(--rule); border-radius: 2px; background: var(--parch-deep); min-width: 0 }
+.picked li::before { counter-increment: best; content: counter(best); font-family: var(--f-caps); font-size: 1.3rem; color: var(--oxblood); text-align: center }
+.picked li span { min-width: 0; overflow-wrap: anywhere }
+.picked li small { color: var(--ink-soft); margin-left: 6px }
+.picked button { background: none; border: 0; color: var(--ink-soft); cursor: pointer; padding: 4px 8px; font-size: 13px; text-decoration: underline }
+.picked:empty { display: none }
+.slots { margin: 0; padding: 0; display: grid; gap: 8px }
+.slot-b { list-style: none; display: grid; grid-template-columns: 2.2em minmax(0, 1fr) auto; align-items: start; gap: 8px; padding: 8px 10px;
+  border: 1px dashed var(--gold); border-radius: 2px; min-width: 0 }
+.slot-b.on { border-style: solid; background: var(--parch-deep) }
+.slot-b.wait { opacity: .55 }
+.slot-b .sn { font-family: var(--f-caps); font-size: 1.3rem; color: var(--oxblood); text-align: center; line-height: 44px }
+.slot-b.on .sn { line-height: 1.6 }
+.slot-b .st { min-width: 0; overflow-wrap: anywhere; display: grid; gap: 6px; align-self: center }
+.slot-b .st small { color: var(--ink-soft); margin-left: 6px }
+.slot-b input { font: inherit; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 2px; background: var(--parch); color: var(--ink); width: 100%; min-height: 44px }
+.slot-b .rm { background: none; border: 0; color: var(--ink-soft); cursor: pointer; padding: 4px 8px; font-size: 13px; text-decoration: underline; align-self: center }
+/* マスコット */
+.mascot { display: flex; align-items: flex-end; gap: 8px; min-width: 0 }
+.mascot { position: relative }
+.mascot img { display: block; height: auto; flex: none; position: relative;
+  filter: drop-shadow(0 0 1px rgba(241,230,204,.55)) drop-shadow(0 0 6px rgba(242,184,75,.22)) drop-shadow(0 6px 8px rgba(0,0,0,.35)) }
+.mascot.left { flex-direction: row-reverse }
+/* 吹き出し：探偵のメモ書き（羊皮紙＋真鍮の細い二重枠、明朝体） */
+.bubble { position: relative; margin: 0 0 18px; background: #f1e6cc; color: #2a1517; border: 1px solid #a8843f; outline: 1px solid rgba(168,132,63,.5); outline-offset: -4px;
+  border-radius: 1px; padding: 9px 14px; font-family: var(--f-display); font-weight: 500; font-size: 13px; line-height: 1.7; letter-spacing: .03em; min-width: 0;
+  box-shadow: 0 6px 14px -8px rgba(0,0,0,.7) }
+.bubble::before { content: ""; position: absolute; bottom: 14px; left: -6px; width: 10px; height: 10px; background: #f1e6cc; border-left: 1px solid #a8843f; border-bottom: 1px solid #a8843f; transform: rotate(45deg) }
+.mascot.left .bubble::before { left: auto; right: -6px; transform: rotate(-135deg) }
+.mascot img { width: auto }
+.hero-m img { height: 150px }
+.q-m { margin: -4px 0 -6px } .q-m img { height: 72px } .q-m .bubble { margin-bottom: 10px; font-size: 12.5px; padding: 6px 10px }
+.res-m img { height: 112px }
+.shelf-h { display: flex; justify-content: space-between; align-items: flex-end; gap: 10px; flex-wrap: wrap }
+.shelf-m img { height: 96px } .shelf-m .bubble { font-size: 12px }
+.empty-m { justify-content: center; padding: 20px 0 } .empty-m img { height: 120px }
+.story-m { justify-content: center; padding: 16px 0 } .story-m img { height: 110px }
+/* カルーセル */
+.carousel { display: grid; gap: 10px; color: var(--on-dark); min-width: 0 }
+.wrap > * { min-width: 0 }
+.c-wrap { min-width: 0 }
+.c-head { display: grid; gap: 2px; text-align: center }
+.c-head .latin { color: var(--gold-bright); font-size: .72rem }
+.ph-seg { display: inline-block }
+.c-head h3 { font-size: 1.2rem; letter-spacing: .06em; line-height: 1.5 }
+.c-note { margin: 2px auto 0; max-width: 34em; font-size: 12px; line-height: 1.6; color: #d8c8a6 }
+.c-tag { font-size: 11px; color: var(--gold-bright); border: 1px solid var(--gold-bright); padding: 0 8px; border-radius: 999px; margin-top: -2px }
+.c-wrap { position: relative; margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))) }
+.c-track { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding: 10px calc(50% - 82px) 6px; overscroll-behavior-x: contain }
+.c-track::-webkit-scrollbar { display: none }
+.c-slide { flex: 0 0 164px; scroll-snap-align: center; display: grid; gap: 6px; justify-items: center; text-align: center; transition: transform .3s, opacity .3s; transform: scale(.86); opacity: .55 }
+.c-slide.on { transform: none; opacity: 1 }
+.c-cover { padding: 0; border: 0; background: none; cursor: pointer; width: 100%; display: grid; box-shadow: 0 10px 22px -10px rgba(0,0,0,.85) }
+.c-cover .cover { width: 100%; border-radius: 2px 4px 0 0 }
+.more-wrap { display: grid; justify-items: center; gap: 6px; padding: 18px 0 8px }
+/* 「もっと見る」：本棚の暗い背景でも目立つよう、真鍮色の地に濃い文字 */
+.btn.more-btn { min-width: 240px; background: #c9a35a; color: #1e0f10; border: 1px solid #f0d89c; font-weight: 800; letter-spacing: .08em;
+  box-shadow: 0 6px 16px -6px rgba(0,0,0,.8), inset 0 0 0 1px rgba(255,255,255,.25) }
+.btn.more-btn:hover, .btn.more-btn:focus-visible { background: #e2c27e; color: #1e0f10 }
+.more-btn small { font-size: 12px; margin-left: 4px; font-weight: 600; color: #4a3020 }
+.more-n { margin: 0; font-size: 12px; color: #e8d6ad; text-shadow: 0 1px 2px rgba(0,0,0,.8) }
+.c-band { background: #8e1f22; color: #f7ecd3; font-family: "Klee One", var(--f-body); font-weight: 600; font-size: 12px; line-height: 1.5; padding: 7px 8px; text-align: left; min-height: 56px; border-radius: 0 0 4px 2px; border-top: 2px solid var(--gold-bright) }
+.c-t { font-family: var(--f-display); font-weight: 800; font-size: 15px; line-height: 1.4; color: var(--on-dark) }
+.c-a { font-size: 12px; color: #cdbf9f; margin-top: -4px }
+.c-slide .lbtns { justify-content: center }
+.c-slide .lbtn { color: var(--on-dark); border-color: var(--gold-bright); min-height: 36px; font-size: 12px }
+.c-slide .lbtn[aria-pressed="true"] { background: #8e1f22; border-color: #8e1f22; color: #f7ecd3 }
+.c-nav { position: absolute; top: 120px; z-index: 2; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--gold-bright); background: rgba(23,12,13,.8); color: var(--gold-bright); font-size: 22px; line-height: 1; cursor: pointer; display: grid; place-items: center }
+.c-nav.prev { left: max(16px, env(safe-area-inset-left, 0px)) } .c-nav.next { right: max(16px, env(safe-area-inset-right, 0px)) }
+.sync summary { cursor: pointer; font-size: 13px; color: var(--oxblood); font-weight: 700; padding: 4px 0 }
+.sync-in { display: grid; gap: 8px; padding-top: 8px }
+.sync .code { display: flex; align-items: center; gap: 12px }
+.sync .code b { font-family: var(--f-caps); font-size: 1.3rem; letter-spacing: .12em; color: var(--ink) }
+.sync input { font: inherit; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 2px; background: var(--parch); color: var(--ink); letter-spacing: .08em; text-transform: uppercase }
+.swap-hint { color: var(--on-dark); opacity: .85; margin: 0 }
+.pickcard.fresh { animation: fresh 1.2s ease-out }
+@keyframes fresh { from { box-shadow: 0 0 0 6px var(--flame) } to { box-shadow: 0 14px 30px -12px rgba(0,0,0,.75) } }
+@media (prefers-reduced-motion: reduce) { .c-slide { transition: none } .pickcard.fresh { animation: none } }
+.wish { display: grid; gap: 8px; padding: 14px 16px; border: 1px solid var(--gold); background: var(--parch-deep) }
+.wish .w-h { font-size: 12px; letter-spacing: .14em; color: var(--oxblood); font-weight: 700 }
+.wish .w-core { margin: 0; font-family: var(--f-display); font-weight: 800; font-size: 1.15rem; line-height: 1.6 }
+.w-led summary { cursor: pointer; font-size: 13px; color: var(--ink-soft); padding: 4px 0 }
+.bklog { justify-self: start; font-size: 13px; color: var(--ink-soft); text-decoration: underline; text-underline-offset: 3px; padding: 4px 0 }
+.bklog small { margin-left: 4px; font-size: 11.5px }
+.lbtns { display: flex; gap: 8px; flex-wrap: wrap }
+.lbtn { font: inherit; font-size: 13px; min-height: 40px; padding: 0 14px; border: 1px solid var(--gold); border-radius: 2px; background: transparent; color: var(--ink); cursor: pointer }
+.lbtn[aria-pressed="true"] { background: var(--oxblood); border-color: var(--oxblood); color: var(--parch) }
+.face .wantmark { position: absolute; top: -6px; left: -4px; z-index: 2; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--oxblood); color: #f7ecd3; font-size: 12px; box-shadow: 0 2px 4px rgba(0,0,0,.5) }
+.face .readmark { position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); z-index: 2; background: rgba(23,12,13,.85); color: #f1e6cc; font-size: 9px; padding: 1px 6px; border: 1px solid var(--gold-bright) }
+img.story { width: 100%; max-width: 320px; justify-self: center; border: 1px solid var(--gold); aspect-ratio: 9 / 16 }
+.nudge { margin: 0; font-size: 13px; color: var(--oxblood); font-weight: 700 }
+.history { display: grid; gap: 10px }
+.h-item { display: grid; gap: 4px; padding-bottom: 10px; border-bottom: 1px dotted var(--rule) }
+.h-item time { font-size: 12px; color: var(--ink-soft) }
+.h-books { display: flex; flex-wrap: wrap; gap: 4px 10px }
+.h-books button { background: none; border: 0; padding: 2px 0; font: inherit; font-weight: 700; color: var(--ink); text-decoration: underline; text-decoration-color: var(--gold); cursor: pointer; text-align: left }
+.h-books small { color: var(--ink-soft) }
+
+/* 既読チェック */
+.readgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px }
+.readgrid button { padding: 0; border: 2px solid transparent; border-radius: 3px; background: none; cursor: pointer; position: relative }
+.readgrid button[aria-pressed="true"] { border-color: var(--oxblood) }
+.readgrid button[aria-pressed="true"]::after { content: "読了"; position: absolute; top: 6px; right: 6px; font-family: var(--f-display); font-weight: 900;
+  color: var(--parch); background: var(--oxblood); border-radius: 50%; width: 40px; height: 40px; display: grid; place-items: center; font-size: 12px;
+  box-shadow: 0 0 0 3px var(--oxblood-soft); transform: rotate(-10deg) }
+
+/* 表紙（革装の本として描く。書影が読めた場合は上に重ねる） */
+.cover { aspect-ratio: 105 / 148; max-width: 100%; border-radius: 2px 4px 4px 2px; position: relative; overflow: hidden; color: var(--gold-bright);
+  display: flex; flex-direction: row-reverse; justify-content: flex-start; gap: 6px; padding: 12px 10px 26px 16px;
+  box-shadow: inset 6px 0 0 rgba(0,0,0,.28), inset 7px 0 0 rgba(255,255,255,.06), 0 6px 14px -8px rgba(0,0,0,.7) }
+.cover::after { content: ""; position: absolute; inset: 8px 6px 8px 14px; border: 1px solid currentColor; opacity: .45; pointer-events: none }
+.cover .vt { writing-mode: vertical-rl; font-family: var(--f-display); font-weight: 900; line-height: 1.15; overflow: hidden }
+.cover .va { writing-mode: vertical-rl; font-size: 10px; opacity: .8; overflow: hidden }
+.cover .no { position: absolute; left: 16px; bottom: 9px; font-family: var(--f-latin); font-size: 11px; opacity: .8 }
+.cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1 }
+/* 長押しで画像の拡大・保存メニューを出さない（長押しは作品の詳細を開く） */
+.cover, .cover img { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none }
+.cover img { pointer-events: none; -webkit-user-drag: none }
+
+/* 革の色（背表紙・表紙共通） */
+.l1 { background: #5b1f24 } .l2 { background: #1f3b2c } .l3 { background: #1f2a44 } .l4 { background: #6a4a23 } .l5 { background: #2a2420 } .l6 { background: #47294a } .l7 { background: #6b3a20 }
+
+/* 結果 */
+.result-head { display: grid; gap: 4px; color: var(--on-dark) }
+.result-head .latin { color: var(--gold-bright); font-size: .8rem }
+.result-head h2 { font-size: 1.7rem; color: var(--on-dark) }
+.pick { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 16px }
+.pick.main { grid-template-columns: 116px minmax(0, 1fr) }
+.pick h3 { font-size: 1.2rem; line-height: 1.45 }
+.pick.main h3 { font-size: 1.4rem }
+.meta { font-size: 12px; color: var(--ink-soft); display: flex; flex-wrap: wrap; gap: 4px 12px }
+.chips { display: flex; flex-wrap: wrap; gap: 6px }
+.chip { white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; font-size: 12px; padding: 1px 8px; border: 1px solid var(--oxblood); color: var(--oxblood); font-weight: 700; border-radius: 2px }
+.chip.plain { border-color: var(--gold); color: var(--ink) }
+.syn { font-size: 14px; margin: 0 }
+.seqnote { font-size: 13px; margin: 0; padding: 6px 10px; border-left: 3px solid var(--oxblood); background: var(--oxblood-soft); color: var(--ink); line-height: 1.6 }
+.cmt { margin: 0; padding: 10px 14px; background: var(--parch-deep); border-radius: 2px; font-size: 14px; display: grid; gap: 2px; border-left: 2px solid var(--gold) }
+.cmt b { font-size: 11px; color: var(--oxblood); letter-spacing: .08em; font-weight: 700 }
+/* 感想の見出しに、虫めがねを持った探偵くんのシルエット（色はテーマに合わせて変わる） */
+.cmt b.who { display: flex; align-items: flex-end; gap: 8px; font-size: 12px }
+.cmt b.who::before { content: ""; width: 30px; height: 38px; flex: none; background: var(--oxblood);
+  -webkit-mask: url("data:image/png;base64,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") center bottom / contain no-repeat; mask: url("data:image/png;base64,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") center bottom / contain no-repeat }
+.buy { display: flex; flex-wrap: wrap; gap: 8px; align-items: center }
+.buy .btn { min-height: 40px; padding: 0 16px; font-size: 14px }
+.buy.buy-top { margin-top: 2px }
+.buy.buy-lead .btn:first-child { min-height: 48px; font-size: 15px; padding: 0 22px; flex: 1 1 220px; justify-content: center }
+.pr { font-size: 11px; color: var(--ink-soft); border: 1px solid var(--rule); padding: 0 5px; border-radius: 2px }
+.rank-list { margin: 0; padding-left: 1.4em; display: grid; gap: 2px; font-size: 14px }
+.rank-list small { color: var(--ink-soft) }
+.foot { font-size: 11.5px; color: var(--on-dark); opacity: .8; display: grid; gap: 6px }
+.foot p { margin: 0 }
+.foot .about summary { cursor: pointer; text-decoration: underline; text-underline-offset: 3px; min-height: 32px; display: flex; align-items: center }
+.foot .about[open] { display: grid; gap: 6px }
+
+/* ===== 本棚 ===== */
+.shelf-intro { color: var(--on-dark); display: grid; gap: 6px }
+.shelf-intro .latin { color: var(--gold-bright); font-size: .8rem }
+.shelf-intro h2 { font-size: 1.7rem; color: var(--on-dark) }
+.shelf-intro p { margin: 0; font-size: 13px; opacity: .85 }
+.tools { display: flex; gap: 8px; flex-wrap: wrap; align-items: center }
+.tools input { flex: 1 1 200px; min-width: 0; font: inherit; padding: 10px 12px; border: 1px solid var(--gold); border-radius: 2px; background: var(--parch); color: var(--ink) }
+.tools select { font: inherit; padding: 10px 8px; border: 1px solid var(--gold); border-radius: 2px; background: var(--parch); color: var(--ink) }
+.filters { display: grid; gap: 12px; background: var(--parch); color: var(--ink); border: 1px solid var(--gold); border-radius: 2px; padding: 14px }
+.filters details summary { cursor: pointer; font-weight: 700; font-size: 13px; color: var(--oxblood); padding: 4px 0 }
+.facets { display: grid; gap: 12px; padding-top: 10px }
+.fgroup { display: grid; gap: 6px; min-width: 0 }
+.fgroup h4 { margin: 0; font-size: 11.5px; letter-spacing: .12em; color: var(--ink-soft) }
+.fchips { display: flex; flex-wrap: wrap; gap: 6px }
+.fchip { font: inherit; font-size: 12.5px; padding: 5px 11px; border: 1px solid var(--gold); background: transparent; color: var(--ink); border-radius: 999px; cursor: pointer; line-height: 1.4 }
+.fchip small { margin-left: 5px; opacity: .65; font-size: 11px }
+.fchip[aria-pressed="true"] { background: var(--oxblood); border-color: var(--oxblood); color: var(--parch) }
+.fchip:disabled { opacity: .3; cursor: default }
+.fbar { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 13px; border-top: 1px solid var(--rule); padding-top: 10px }
+.fbar b { font-size: 1.15rem; color: var(--oxblood) }
+.bay { display: grid; gap: 0 }
+.bay-label { justify-self: center; margin-bottom: -1px; position: relative; z-index: 1; padding: 3px 16px; font-family: var(--f-display); font-weight: 900; font-size: 13px; letter-spacing: .1em;
+  color: var(--ink); background: linear-gradient(var(--gold-bright), var(--gold)); border-radius: 2px; box-shadow: 0 2px 4px rgba(0,0,0,.5) }
+.bay-label small { font-family: var(--f-latin); font-weight: 600; margin-left: 8px }
+.case { background: var(--shelf-back); border: 10px solid var(--wood); outline: 1px solid var(--gold); outline-offset: -4px; border-bottom-width: 0; border-radius: 3px 3px 0 0; padding: 14px 10px 0;
+  box-shadow: inset 0 10px 18px rgba(0,0,0,.55) }
+.row { display: grid; grid-template-columns: repeat(auto-fill, minmax(68px, 1fr)); grid-auto-rows: 158px; grid-auto-flow: row dense; column-gap: 10px;
+  background-image: linear-gradient(to bottom, transparent 140px, var(--wood-light) 140px, var(--wood) 146px, var(--shelf-back) 156px);
+  background-size: 100% 158px }
+.slot { display: flex; align-items: flex-end; justify-content: center; gap: 8px; padding-bottom: 18px; min-width: 0 }
+.slot.has-pop { grid-column: span 2; gap: 6px }
+.slot.has-pop .face { max-width: 78px }
+.face { flex: 1 1 0; max-width: 92px; min-width: 0; padding: 0; border: 0; background: none; cursor: pointer; transition: transform .15s; position: relative }
+.face .cover { width: 100%; padding: 8px 5px 17px 10px; gap: 3px; box-shadow: inset 4px 0 0 rgba(0,0,0,.28), 0 8px 10px -6px rgba(0,0,0,.8) }
+.face .cover::after { inset: 5px 4px 5px 8px }
+.face .cover .va { font-size: 8.5px }
+.face .cover .no { left: 10px; bottom: 4px; font-size: 9px }
+.face:hover { transform: translateY(-5px) }
+.face .rib { position: absolute; top: -6px; right: -4px; z-index: 2; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--gold-bright); color: var(--ink); font-size: 9px; font-weight: 700; box-shadow: 0 0 0 2px var(--gold), 0 2px 4px rgba(0,0,0,.5); transform: rotate(12deg) }
+.face .rib.sub { background: #e9dcc0; box-shadow: 0 0 0 2px var(--gold), 0 2px 4px rgba(0,0,0,.5) }
+/* 店頭POP（手書きのおすすめカード） */
+.pop { flex: 1 1 0; max-width: 108px; min-width: 88px; min-height: 96px; max-height: 134px; overflow: hidden; align-self: flex-end; margin-bottom: -8px; background: var(--pop-paper); color: var(--pop-ink); border-radius: 2px; cursor: pointer;
+  padding: 0 0 8px; border: 0; text-align: left; transform: rotate(-2.5deg); box-shadow: 0 6px 10px -4px rgba(0,0,0,.6); position: relative; display: grid; align-content: start; gap: 4px }
+.pop.r { transform: rotate(2deg) }
+.pop::before { content: ""; position: absolute; top: -6px; left: 50%; width: 30px; height: 12px; transform: translateX(-50%) rotate(-3deg); background: var(--pop-tape) }
+.pop .ph { background: var(--pop-red); color: var(--pop-paper); font-family: var(--f-display); font-weight: 900; font-size: 11px; letter-spacing: .04em; padding: 5px 6px 4px; white-space: nowrap; border-radius: 2px 2px 0 0 }
+.pop .pt { font-family: "Klee One", var(--f-body); font-weight: 600; font-size: 12px; line-height: 1.4; padding: 0 6px; overflow-wrap: anywhere }
+.pop .ps { font-family: "Klee One", var(--f-body); font-size: 10.5px; color: var(--pop-red); padding: 0 6px; text-align: right ; white-space: nowrap; font-size: 10px}
+.empty { color: var(--on-dark); font-size: 14px; margin: 0 }
+
+/* 本の詳細（目録カード） */
+dialog.detail { border: 0; padding: 0; background: transparent; width: min(560px, calc(100% - 32px)); max-height: calc(100% - 48px); color: var(--ink) }
+dialog.detail::backdrop { background: rgba(10, 14, 11, .72) }
+dialog.detail .card { max-height: calc(100vh - 48px); max-height: calc(100dvh - 48px); overflow-y: auto }
+.d-top { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 16px }
+.d-top h3 { font-size: 1.3rem; line-height: 1.45 }
+.axes { display: grid; gap: 6px; font-size: 13px }
+.axes .ax { display: grid; grid-template-columns: 6.5em 1fr 2.4em; gap: 10px; align-items: center }
+.axes .bar { height: 6px; background: var(--rule); border-radius: 1px; overflow: hidden }
+.axes .bar i { display: block; height: 100%; background: var(--oxblood) }
+.axes .bar i.pub { background: var(--gold) }
+.cmp { display: grid; gap: 10px }
+.tierline { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: var(--ink) }
+.tier { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 2px; font-family: var(--f-caps); font-weight: 700; font-size: 15px; line-height: 1;
+  border: 1px solid var(--gold); color: var(--ink); background: transparent }
+.tier.t-S { background: #8e1f22; border-color: #c9a35a; color: #f7ecd3; box-shadow: 0 0 0 2px rgba(201,163,90,.35) }
+.tier.t-A { background: var(--gold); border-color: var(--gold); color: #2a1517 }
+.tier.t-C { opacity: .7 }
+.tier-legend { font-size: 12px !important; opacity: .85 }
+.tier-legend b { color: var(--gold-bright) }
+.cmp-legend .lg-n { margin-left: auto }
+.awd { display: grid; gap: 6px; padding: 10px 12px; border: 1px solid var(--rule) }
+.awd h4 { margin: 0; font-size: 11.5px; letter-spacing: .12em; color: var(--oxblood) }
+.awd ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 3px; font-size: 13.5px }
+.awd li { display: flex; gap: 8px; align-items: baseline }
+.awd li::before { content: ""; width: 6px; height: 6px; flex: none; transform: rotate(45deg) translateY(-1px); background: var(--gold) }
+.cmp-legend { display: flex; align-items: baseline; gap: 14px; font-size: 12px; color: var(--ink-soft) }
+.cmp-legend .lg { display: inline-flex; align-items: baseline; gap: 6px }
+.cmp-legend .lg::before { content: ""; width: 14px; height: 6px; align-self: center; background: var(--oxblood) }
+.cmp-legend .lg.pub::before { background: var(--gold) }
+.cmp-legend b { font-family: var(--f-display); font-size: 1.25rem; color: var(--ink); font-variant-numeric: lining-nums }
+.cmp-legend .lg-n { margin-left: -8px }
+.axes .ax.two { grid-template-columns: 6.6em minmax(0, 1fr) 4.8em }
+.axes .ax.head { font-size: 10.5px; color: var(--ink-soft); margin-bottom: -2px }
+.axes .bars { display: grid; gap: 3px }
+.axes .v2 { display: grid; grid-template-columns: 1fr 1fr; text-align: right; gap: 4px; min-width: 0; font-family: var(--f-display); font-size: 13px; font-variant-numeric: lining-nums tabular-nums }
+.axes .v2 .p { color: var(--gold); font-weight: 700 }
+.axes .head .v2 { font-family: var(--f-body); font-size: 10.5px }
+.cmp-note { margin: 0; font-size: 13px; padding: 8px 12px; background: var(--parch-deep); border-left: 2px solid var(--oxblood) }
+.cmp-src { margin: 0; font-size: 11px; color: var(--ink-soft) }
+.axes .v { text-align: right; font-family: var(--f-latin); font-size: 15px; font-weight: 600 }
+.axes-h { display: flex; justify-content: space-between; align-items: baseline; font-size: 12px; color: var(--ink-soft) }
+.axes-h b { font-family: var(--f-latin); font-size: 1.4rem; color: var(--ink); font-weight: 600 }
+.x { position: absolute; top: 4px; right: 6px; z-index: 2; background: none; border: 0; font-size: 22px; line-height: 1; padding: 8px 10px; cursor: pointer; color: var(--ink-soft) }
+
+.toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--parch);
+  padding: 8px 16px; border-radius: 2px; font-size: 13px; z-index: 20 }
+@media (prefers-reduced-motion: no-preference) {
+  .screen { animation: rise .35s ease-out both }
+  @keyframes rise { from { opacity: .5; transform: translateY(6px) } to { opacity: 1; transform: none } }
+}
+@media (prefers-reduced-motion: reduce) { .face { transition: none } .face:hover { transform: none } }
+.odai-title { text-wrap: wrap; word-break: keep-all; overflow-wrap: anywhere }
+.odai-note label { font-size: 14px }
+.odai-note textarea { font: inherit; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 2px; background: var(--parch); color: var(--ink); width: 100%; resize: vertical }
+.odai-meta { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; color: var(--ink-soft) }
+.odai-meta small { font-size: 11.5px; line-height: 1.6 }
+</style>
+</head>
+<body>
+<!-- 今日の豆知識（/mame/）。build.py が、診断のページの <style> と豆知識のカレンダー・関連作品を入れて mame/index.html を作る。
+     ストーリーで出した2択クイズの答え合わせのページ。その日になるまで、その日の問題は表示しない（日本時間で切り替え） -->
+<header class="top"><div class="top-in">
+  <a class="plate" href="../" style="text-decoration:none">謎本診断</a>
+  <nav class="tabs" aria-label="ページ"><a class="tab" href="../">診断</a><a class="tab" href="../#shelf">だいそうの本棚</a><a class="tab" href="../odai/">今月のお題</a><a class="tab" href="../ranking/">ランキング</a></nav>
+</div></header>
+<main class="wrap" id="app"></main>
+<style>
+.mm-date { font-size: 13px; color: var(--ink-soft) }
+.mm-q { margin: 0; font-size: 1.25rem; line-height: 1.6 }
+.mm-opts { display: grid; gap: 10px }
+.mm-opt { font: inherit; font-size: 16px; text-align: left; padding: 12px 14px; border: 1px solid var(--rule); border-radius: 2px; background: var(--parch); color: var(--ink); cursor: pointer; display: flex; gap: 10px; align-items: baseline }
+.mm-opt b { font-family: var(--f-caps); color: var(--gold) }
+.mm-opt[disabled] { cursor: default }
+.mm-opt.ok { border-color: #2f6b3a; background: #2f6b3a; color: #fff } .mm-opt.ok b { color: #fff }
+.mm-opt.ng { border-color: var(--oxblood); color: var(--oxblood) }
+.mm-ans { display: grid; gap: 8px; border-top: 1px solid var(--rule); padding-top: 12px }
+.mm-ans h3 { margin: 0; font-size: 1.05rem } .mm-ans p { margin: 0 }
+.mm-verdict { font-weight: 700; color: var(--oxblood) }
+.mm-src { font-size: 12px; color: var(--ink-soft) } .mm-src a { color: inherit }
+.mm-books { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px }
+.mm-book { display: grid; grid-template-columns: 64px 1fr; gap: 10px; align-items: start; padding: 10px 0; border-top: 1px solid var(--rule) }
+.mm-book:first-child { border-top: 0 }
+.mm-cover { width: 64px; aspect-ratio: 105 / 148; border-radius: 2px; overflow: hidden; position: relative; background: #3a2a22; color: #f1e6cc; font-size: 10px; line-height: 1.3; padding: 6px 5px; writing-mode: vertical-rl; display: flex; align-items: center; justify-content: center; text-align: center }
+.mm-cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover }
+.mm-bt { font-weight: 700; font-size: 15px; line-height: 1.45 } .mm-ba { font-size: 13px; color: var(--ink-soft) }
+.mm-tier { font-size: 11px; padding: 2px 7px; border-radius: 999px; background: var(--oxblood); color: #fff; justify-self: start }
+.mm-cmt { font-size: 13px; line-height: 1.6; margin: 2px 0 0; padding-left: 8px; border-left: 2px solid var(--gold-bright) }
+.mm-acts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px }
+.mm-acts a { font-size: 12px; padding: 5px 9px; border: 1px solid var(--rule); border-radius: 2px; background: var(--parch); color: var(--ink); text-decoration: none }
+.mm-past { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px }
+.mm-past a { display: grid; grid-template-columns: 3.4em 1fr; gap: 8px; padding: 8px 0; border-top: 1px solid var(--rule); color: var(--ink); text-decoration: none; font-size: 14px }
+.mm-past a span { color: var(--ink-soft); font-size: 13px }
+.mm-body { display: grid; gap: 14px }
+.mm-sec { margin: 4px 0 0; font-size: 15px; border-left: 3px solid var(--oxblood); padding-left: 8px }
+</style>
+<script>
+const MAME = [{"d":"2026-12-01","cat":"賞・ランキング","q":"「このミステリーがすごい！」が創刊されたのは？","a":"1988年","b":"2002年","ans":"A","exp":"宝島社の別冊として1988年12月に創刊。いまも毎年12月に出る年間ランキングで、年末はこのミスを含む4大ランキングの発表が続く“ミステリーの年末”の始まり。","src":"Wikipedia「このミステリーがすごい!」","url":"https://ja.wikipedia.org/wiki/このミステリーがすごい!","books":["b3a5a5dd4532","59e1b6ee1452","edc8ddfae150"]},{"d":"2026-12-02","cat":"作家","q":"江戸川乱歩の名前の由来は？","a":"東京の江戸川","b":"エドガー・アラン・ポー","ans":"B","exp":"本名は平井太郎。アメリカの作家エドガー・アラン・ポーの名前をもじった筆名。1923年に『二銭銅貨』でデビューし、名探偵・明智小五郎を生んだ。","src":"Wikipedia「江戸川乱歩」","url":"https://ja.wikipedia.org/wiki/江戸川乱歩","books":["e630fcd82c09"]},{"d":"2026-12-03","cat":"海外の名作家","q":"1926年12月、アガサ・クリスティーに起きた出来事は？","a":"11日間の失踪","b":"出版社との裁判","ans":"A","exp":"12月3日に家を出たまま行方不明になり、大捜索の末、11日後に北イングランドのホテルで見つかった。なぜ姿を消したのかは、今もはっきりしていない。","src":"HISTORY「10 Things You May Not Know About Agatha Christie」","url":"https://www.history.com/articles/10-things-you-may-not-know-about-agatha-christie","books":["9d5ea0b0e6e1"]},{"d":"2026-12-04","cat":"用語","q":"外の世界と行き来できない状況で起きる事件を何という？","a":"ホワイダニット","b":"クローズド・サークル","ans":"B","exp":"吹雪の山荘、嵐の孤島、止まった列車などが定番。逃げ場のない中で犯人を探す緊張感が魅力。古典ではクリスティー『そして誰もいなくなった』が有名。","src":"Wikipedia「クローズド・サークル」","url":"https://ja.wikipedia.org/wiki/クローズド・サークル","books":["c3206dbc3b9f","6273876176ed","1050a4d619cb"]},{"d":"2026-12-05","cat":"ミステリーの歴史","q":"世界初の推理小説とされるのは？","a":"モルグ街の殺人","b":"緋色の研究","ans":"A","exp":"1841年にエドガー・アラン・ポーが発表した短編が、一般に世界初の推理小説とされる。乱歩の筆名の由来になった、あのポーの作品。","src":"Wikipedia「推理小説」","url":"https://ja.wikipedia.org/wiki/推理小説","books":[]},{"d":"2026-12-06","cat":"だいそうの数字","q":"だいそうの読了本で一番多い作家は？","a":"東野圭吾","b":"米澤穂信・中山七里","ans":"B","exp":"読了した小説404冊のうち、米澤穂信と中山七里が18冊で同率1位。続いて有栖川有栖16冊、東野圭吾と知念実希人が15冊。","src":"だいそうの読了記録（作品DB）","url":"","books":["4ca690c5f93b","df997d4bf099"]},{"d":"2026-12-07","cat":"ミステリーのルール","q":"探偵小説のお約束「ノックスの十戒」が発表されたのは？","a":"1928年","b":"1958年","ans":"A","exp":"作家ロナルド・ノックスが1928年、年間傑作選の序文で示した10か条。読者に対してフェアに書くための“お約束”として、今も語られる。","src":"Wikipedia「ノックスの十戒」","url":"https://ja.wikipedia.org/wiki/ノックスの十戒","books":["e1b2133a8e7e"]},{"d":"2026-12-08","cat":"作家","q":"『すべてがFになる』の森博嗣、デビュー当時の本業は？","a":"新聞記者","b":"大学の助教授","ans":"B","exp":"デビュー当時は名古屋大学工学部の助教授で、専門は建築材料の数値解析。最初のプロフィールでは「国立N大学助教授」と伏せていた。","src":"Wikipedia「森博嗣」","url":"https://ja.wikipedia.org/wiki/森博嗣","books":["f8e54ced2b11","51f05dc0659c"]},{"d":"2026-12-09","cat":"賞・ランキング","q":"メフィスト賞の賞金はいくら？","a":"なし","b":"1000万円","ans":"A","exp":"賞金はなく、受賞作がそのまま本になり、印税が賞金代わり。下読みなしで編集者が直接読み、「1人が絶賛したら即デビュー」が原則。第1回は『すべてがFになる』。","src":"Wikipedia「メフィスト賞」","url":"https://ja.wikipedia.org/wiki/メフィスト賞","books":["a063b7997554","f0969df8cf7c","288fd1a28dcf"]},{"d":"2026-12-10","cat":"名探偵","q":"シャーロック・ホームズが初めて登場した作品は？","a":"四つの署名","b":"緋色の研究","ans":"B","exp":"1887年に発表されたシリーズ第1作で、ホームズとワトソンが出会う話。原題の「study」は「研究」ではなく美術用語の「習作」だとする説もある。","src":"Wikipedia「緋色の研究」","url":"https://ja.wikipedia.org/wiki/緋色の研究","books":["982e44bad2d1"]},{"d":"2026-12-11","cat":"作家","q":"東野圭吾が作家になる前の仕事は？","a":"会社員（技術者）","b":"高校の教師","ans":"A","exp":"日本電装（現デンソー）の技術者として働きながら執筆し、1985年に『放課後』で江戸川乱歩賞を受賞してデビューした。","src":"Wikipedia「東野圭吾」","url":"https://ja.wikipedia.org/wiki/東野圭吾","books":["fc21ff8808ce"]},{"d":"2026-12-12","cat":"賞・ランキング","q":"江戸川乱歩賞はどうやって始まった？","a":"出版社の創業記念","b":"乱歩が自分のお金を寄付","ans":"B","exp":"1954年、乱歩が探偵作家クラブに100万円を寄付して創設。最初の2回は作品ではなく、評論家や出版社に贈られ、第3回から長編の公募になった。","src":"imidas「江戸川乱歩賞」","url":"https://imidas.jp/bungaku/detail/101.html","books":["e05aae10963f","fd9098e33cc3","fbe8b365ef94"]},{"d":"2026-12-13","cat":"だいそうの数字","q":"だいそうの読了本404冊のうち、クローズド・サークルものは？","a":"12冊","b":"49冊","ans":"B","exp":"404冊中49冊で、約8冊に1冊。読者への挑戦状がある作品は12冊だった。逃げ場のない舞台は、やっぱり読みたくなる。","src":"だいそうの読了記録（作品DB）","url":"","books":["fbbee7bd9ead","b3a5a5dd4532"]},{"d":"2026-12-14","cat":"用語","q":"犯人が最初から分かっている形式のミステリーを何という？","a":"本格","b":"倒叙","ans":"B","exp":"先に犯人の犯行を見せ、探偵がどこから崩すのかを楽しむ形式。ドラマ『刑事コロンボ』が代表例で、日本では『古畑任三郎』もよく例に挙がる。","src":"Wikipedia「刑事コロンボ」","url":"https://ja.wikipedia.org/wiki/刑事コロンボ","books":["abf340f9d2da","dca950a4233e"]},{"d":"2026-12-15","cat":"賞・ランキング","q":"『容疑者Xの献身』が同じ年に受賞した2つの賞は？","a":"直木賞と本格ミステリ大賞","b":"芥川賞と本屋大賞","ans":"A","exp":"2006年、第134回直木賞と第6回本格ミステリ大賞をあわせて受賞。ガリレオシリーズの長編で、映画化もされた。","src":"Wikipedia「東野圭吾」","url":"https://ja.wikipedia.org/wiki/東野圭吾","books":["207c53c07d0d"]},{"d":"2026-12-16","cat":"名作シリーズ","q":"綾辻行人「館シリーズ」の館を建てた建築家の名前は？","a":"御手洗潔","b":"中村青司","ans":"B","exp":"奇妙な館を数多く手がけた建築家、という設定でシリーズに共通して登場する名前。第1作『十角館の殺人』（1987年）は“新本格”の始まりとされる。","src":"Wikipedia「館シリーズ」","url":"https://ja.wikipedia.org/wiki/館シリーズ","books":["fbbee7bd9ead","c5a6da03500b","bbe04a154087"]},{"d":"2026-12-17","cat":"作家","q":"綾辻行人の妻も作家。誰？","a":"小野不由美","b":"宮部みゆき","ans":"A","exp":"2人は京都大学の推理小説研究会の出身で、1986年に結婚。綾辻行人は翌1987年、大学院在学中に『十角館の殺人』でデビューした。","src":"Wikipedia「綾辻行人」","url":"https://ja.wikipedia.org/wiki/綾辻行人","books":["fba8c1f3527f","9404a764082e"]},{"d":"2026-12-18","cat":"ミステリーの歴史","q":"「探偵小説」が「推理小説」と呼ばれるようになった理由は？","a":"海外で呼び名が変わった","b":"「偵」の字が使いにくくなった","ans":"B","exp":"1946年に作家・木々高太郎が「推理小説」という言葉を使い、同じ年の11月から「偵」の字が当用漢字の制限を受けたため、「探偵小説」は次第に使われなくなった。","src":"Wikipedia「推理小説」","url":"https://ja.wikipedia.org/wiki/推理小説","books":[]},{"d":"2026-12-19","cat":"賞・ランキング","q":"本格ミステリ大賞を選ぶのは？","a":"本格ミステリ作家クラブの会員","b":"全国の書店員","ans":"A","exp":"2001年に始まった賞で、作家などの会員の投票で決まる。クラブは2000年に設立され、初代会長は有栖川有栖。","src":"Wikipedia「本格ミステリ作家クラブ」","url":"https://ja.wikipedia.org/wiki/本格ミステリ作家クラブ","books":["551c3b2432fc","92447a170d6e","687a80262e2e"]},{"d":"2026-12-20","cat":"だいそうの数字","q":"だいそうの読了本404冊のうち、ティアS（人生ベスト級）は？","a":"80冊","b":"23冊","ans":"B","exp":"人生ベスト級のSは404冊中23冊で、約17冊に1冊。人に強く薦めたいAより、ぐっと狭き門。全リストは謎本診断の本棚で見られる。","src":"だいそうの読了記録（作品DB）","url":"","books":["12f6ed1900fc","49abaeb2c72a","b338666f66b3"]},{"d":"2026-12-21","cat":"賞・ランキング","q":"本屋大賞を選ぶのは？","a":"全国の書店員","b":"文芸評論家","ans":"A","exp":"合言葉は「全国書店員が選んだ いちばん! 売りたい本」。2004年に始まり、ミステリーでは2011年に『謎解きはディナーのあとで』が大賞に選ばれた。","src":"Wikipedia「本屋大賞」","url":"https://ja.wikipedia.org/wiki/本屋大賞","books":["53f99d689fd3"]},{"d":"2026-12-22","cat":"作家","q":"湊かなえ『告白』はデビュー作。本屋大賞を受賞したのは？","a":"2019年","b":"2009年","ans":"B","exp":"デビュー作のまま2009年に本屋大賞を受賞。もとは第一章「聖職者」が小説推理新人賞を受賞した短編だった。","src":"Wikipedia「告白 (湊かなえ)」","url":"https://ja.wikipedia.org/wiki/告白_(湊かなえ)","books":["820e3004e9c3"]},{"d":"2026-12-23","cat":"作家","q":"伊坂幸太郎作品の舞台によく出てくる街は？","a":"仙台","b":"横浜","ans":"A","exp":"東北大学を卒業し、今も仙台市に住む。仙台を舞台にした作品が多く、『ゴールデンスランバー』は映画版も仙台市内で撮影された。","src":"Wikipedia「伊坂幸太郎」","url":"https://ja.wikipedia.org/wiki/伊坂幸太郎","books":["496d7af2a124","f2dcbac3db73"]},{"d":"2026-12-24","cat":"季節（クリスマス）","q":"ホームズがクリスマスのガチョウをきっかけに事件に挑む短編は？","a":"まだらの紐","b":"青い紅玉","ans":"B","exp":"1892年発表の短編で、事件はクリスマスから2日目、12月27日の朝に始まる。日本では「青いガーネット」の題でも知られる。","src":"Wikipedia「青い紅玉」","url":"https://ja.wikipedia.org/wiki/青い紅玉","books":["a6143ed263d5","669fe2d13082"]},{"d":"2026-12-25","cat":"海外の名作家","q":"『オリエント急行の殺人』の着想のもとになった、クリスティーの実体験は？","a":"乗った列車が立ち往生","b":"列車で盗難にあった","ans":"A","exp":"クリスティーは1931年にオリエント急行に乗り、悪天候で列車が立ち往生する体験をした。この経験が、1934年発表の名作につながった。","src":"Wikipedia「オリエント急行の殺人」","url":"https://ja.wikipedia.org/wiki/オリエント急行の殺人","books":["f83d92aefc28"]},{"d":"2026-12-26","cat":"海外の名作家","q":"世界で一番売れたミステリーとされるのは？","a":"緋色の研究","b":"そして誰もいなくなった","ans":"B","exp":"1939年にイギリスで刊行。クリスティー作品の中でも最も多く出版され、1億冊以上とされる。","src":"Wikipedia「そして誰もいなくなった」","url":"https://ja.wikipedia.org/wiki/そして誰もいなくなった","books":["6082377d43ef"]},{"d":"2026-12-27","cat":"だいそうの数字","q":"だいそうの読了本で、「都市」の次に多い舞台は？","a":"家・マンション","b":"館・洋館","ans":"A","exp":"都市が165冊で圧倒的。次が家・マンションの48冊で、村・田舎町39冊、館・洋館33冊、学校32冊と続く。身近な場所ほど怖い、のかもしれない。","src":"だいそうの読了記録（作品DB）","url":"","books":["fe425bd85dab","32ca27180216"]},{"d":"2026-12-28","cat":"賞・ランキング","q":"4大ミステリーランキングすべてで1位になった、史上初の作品は？","a":"容疑者Xの献身","b":"黒牢城","ans":"B","exp":"米澤穂信『黒牢城』が2021年末、このミス・週刊文春・本格ミステリ・ベスト10・ミステリが読みたい！の4つで1位に。山田風太郎賞とあわせて5冠になった。","src":"KADOKAWA「黒牢城」受賞のお知らせ","url":"https://www.kadokawa.co.jp/topics/6868/","books":["111d7abeca3a"]},{"d":"2026-12-29","cat":"作家","q":"鮎川哲也が得意とした謎は？","a":"アリバイ崩し","b":"密室","ans":"A","exp":"代表作に『黒いトランク』など。名前を冠した鮎川哲也賞は1990年に始まった、東京創元社の長編ミステリーの新人賞。","src":"Wikipedia「鮎川哲也」","url":"https://ja.wikipedia.org/wiki/鮎川哲也","books":["567de6625eaa","8098de9d8329","276a6f2d7f9f"]},{"d":"2026-12-30","cat":"ミステリーのルール","q":"「読者への挑戦状」を最初に使ったとされる作家は？","a":"エラリー・クイーン","b":"J・J・コニントン","ans":"B","exp":"最初の例は1926年のコニントン作品。広く知られるようになったのは、エラリー・クイーンが「国名シリーズ」で使ってから。日本では有栖川有栖の学生アリスシリーズが有名。","src":"Wikipedia「読者への挑戦」","url":"https://ja.wikipedia.org/wiki/読者への挑戦","books":["7183f2260d59","6273876176ed","ca7150d1efcb"]},{"d":"2026-12-31","cat":"賞・ランキング","q":"年末の「4大ミステリーランキング」に入っていないのは？","a":"本屋大賞","b":"週刊文春ミステリーベスト10","ans":"A","exp":"4大ランキングは、このミス・週刊文春ミステリーベスト10・本格ミステリ・ベスト10・ミステリが読みたい！。本屋大賞は春に発表される、書店員が選ぶ賞。","src":"KADOKAWA「黒牢城」受賞のお知らせ","url":"https://www.kadokawa.co.jp/topics/6868/","books":["45ee0c79f198","17db37145559"]}];          // [{d, cat, q, a, b, ans, exp, src, url, books:[id]}]
+const DB = {"17db37145559":{"t":"蒼海館の殺人","a":"阿津川辰海","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/2073/9784065212073.jpg?_ex=600x600","tr":"A","c":"正直面白さは前作超え！災害×ミステリーにトリックと伏線がてんこ盛りです","asin":"4065212073"},"f0969df8cf7c":{"t":"法廷遊戯","a":"五十嵐律人","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/8602/9784065298602_1_3.jpg?_ex=600x600","tr":"B","c":"ロースクールが舞台のリーガルミステリー！緊迫感に一気読みでした","asin":"4065298601"},"59e1b6ee1452":{"t":"禁忌の子","a":"山口未桜","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/5694/9784488025694_1_6.jpg?_ex=600x600","tr":"A","c":"自分と瓜二つの死体という大きな謎に最初から最後まで夢中！めちゃくちゃ面白かったです","asin":"4488025692"},"92447a170d6e":{"t":"屍人荘の殺人","a":"今村昌弘","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/6114/9784488466114.jpg?_ex=600x600","tr":"A","c":"謎の機関、いわくつきの合宿、突然のクローズドサークル。面白い要素が満載です","asin":"4488466117"},"4ca690c5f93b":{"t":"満願","a":"米澤穂信","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/7843/9784101287843.jpg?_ex=600x600","tr":"A","c":"完成度の高い短編がそろう一冊！ノスタルジックで不穏な空気がたまらない","asin":"4101287848"},"c5a6da03500b":{"t":"迷路館の殺人","a":"綾辻行人","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/rakutenkobo-ebooks/cabinet/6301/2000002136301.jpg?_ex=600x600","tr":"A","c":"作中作という変わった形のミステリー！再読なのに初めてのように楽しめました","asin":"4062763974"},"276a6f2d7f9f":{"t":"アリバイ崩し承ります","a":"大山誠一郎","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/5485/9784408555485.jpg?_ex=600x600","tr":"B","c":"ドラマと違って原作は完全に安楽椅子探偵なのも面白い！ドラマ好きの人にもおすすめです","asin":"4408555487"},"551c3b2432fc":{"t":"地雷グリコ","a":"青崎有吾","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/1659/9784041111659_1_4.jpg?_ex=600x600","tr":"S","c":"面白すぎた！アクション大作を1本見たようなハラハラドキドキ。これぞ究極の頭脳戦","asin":"404111165X"},"fd9098e33cc3":{"t":"13階段","a":"高野和明","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/2282/9784065412282_1_2.jpg?_ex=600x600","tr":"S","c":"発売から25年経っても全く色あせない名作！記憶の中の「階段」の謎に引き込まれます","asin":"B0FZHX96C8"},"820e3004e9c3":{"t":"告白","a":"湊かなえ","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/3448/9784575513448_1_4.jpg?_ex=600x600","tr":"A","c":"語り手が変わっていく構成に引き込まれる！イヤミスの代表作です","asin":"457551344X"},"fe425bd85dab":{"t":"変な絵","a":"雨穴","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/8138/9784575528138_1_2.jpg?_ex=600x600","tr":"A","c":"変な家シリーズに負けない面白さ！絵があるぶん、ぱっと見の不気味さはこっちが上かも","asin":"4575528137"},"bbe04a154087":{"t":"水車館の殺人","a":"綾辻行人","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/rakutenkobo-ebooks/cabinet/6314/2000002136314.jpg?_ex=600x600","tr":"B","c":"山奥の水車の館に仮面の当主と美少女、冒頭から心をつかまれっぱなし。シリーズ読破を目指します","asin":"4062760320"},"687a80262e2e":{"t":"名探偵のいけにえ","a":"白井智之","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/4828/9784101044828_1_12.jpg?_ex=600x600","tr":"S","c":"教祖の奇跡を信じる教団で起きる殺人！論理の積み重ねが圧巻です","asin":"B0B8RF6Q79"},"496d7af2a124":{"t":"ゴールデンスランバー","a":"伊坂幸太郎","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/0267/9784101250267.jpg?_ex=600x600","tr":"A","c":"首相暗殺の濡れ衣を着せられた男の逃走劇！伊坂作品の代表作です","asin":"410125026X"},"a063b7997554":{"t":"ハサミ男","a":"殊能将之","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/5223/9784062735223.jpg?_ex=600x600","tr":"A","c":"自分の手口を真似た犯人を追う殺人鬼！設定の独特さに引き込まれます","asin":"4062735229"},"111d7abeca3a":{"t":"黒牢城","a":"米澤穂信","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/7221/9784041147221_1_23.jpg?_ex=600x600","tr":"A","c":"籠城中の城で起きる事件を官兵衛と解く！歴史に詳しくなくても楽しめます","asin":"4041147220"},"567de6625eaa":{"t":"ジェリーフィッシュは凍らない","a":"市川憂人","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/6219/9784488406219.jpg?_ex=600x600","tr":"A","c":"21世紀の『そして誰もいなくなった』と言われるのも納得！再読でも楽しめました","asin":"4488406211"},"9404a764082e":{"t":"Another","a":"綾辻行人","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/0014/9784041000014_1_2.jpg?_ex=600x600","tr":"B","c":"異様な空気のクラスにじわじわ怖くなる！学園ホラーミステリーです","asin":"4041000017"},"49abaeb2c72a":{"t":"カラスの親指","a":"道尾秀介","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/9778/9784062769778_1_23.jpg?_ex=600x600","tr":"S","c":"詐欺師コンビの人情劇！笑いとシリアスのバランスが絶妙です","asin":"4062769778"},"edc8ddfae150":{"t":"失われた貌","a":"櫻田智也","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/4119/9784103564119_1_12.jpg?_ex=600x600","tr":"A","c":"顔のない死体から始まる警察小説！地道な捜査で謎がつながっていく過程が見事","asin":"4103564113"},"9d5ea0b0e6e1":{"t":"アクロイド殺し","a":"アガサ・クリスティー","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/0035/9784151300035.jpg?_ex=600x600","tr":"B","c":"ポアロが村の殺人に挑む！ミステリー好きなら一度は読みたい名作です","asin":"4151300031"},"e630fcd82c09":{"t":"乱歩殺人事件−『悪霊』ふたたび","a":"芦辺拓　江戸川乱歩","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/6354/9784041146354_1_4.jpg?_ex=600x600","tr":"B","c":"乱歩に未完の作品があることをこの本で初めて知りました！乱歩好きにはたまらないはず","asin":"4041146356"},"7183f2260d59":{"t":"月光ゲーム　Yの悲劇88","a":"有栖川有栖","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/4016/9784488414016_1_3.jpg?_ex=600x600","tr":"B","c":"噴火で閉ざされた山でのキャンプ！学生アリスシリーズの1作目です","asin":"448841401X"},"df997d4bf099":{"t":"連続殺人鬼カエル男","a":"中山七里","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/0899/9784796680899.jpg?_ex=600x600","tr":"S","c":"グロさも人間の狂気も全部が一級品！これが本当にデビュー作なのかと驚きました","asin":"4796680896"},"fbe8b365ef94":{"t":"殺し屋の営業術","a":"野宮有","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/3303/9784065403303_1_2.jpg?_ex=600x600","tr":"A","c":"ありえない展開だけで先が気になる！乱歩賞の期待をいい意味で裏切ってくれました","asin":"4065403308"},"982e44bad2d1":{"t":"シャーロックホームズ　緋色の研究","a":"コナン・ドイル","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/4054/9784102134054.jpg?_ex=600x600","tr":"B","c":"小学生ぶりに読み直したら全然覚えてなかった！改めて読むとやっぱり名作です","asin":"4102134050"},"f2dcbac3db73":{"t":"アヒルと鴨のコインロッカー","a":"伊坂幸太郎","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/rakutenkobo-ebooks/cabinet/9317/2000001719317.jpg?_ex=600x600","tr":"A","c":"本屋を襲う誘いから始まる不思議な物語！過去と現在が交互に進みます","asin":"4488464017"},"e05aae10963f":{"t":"天使のナイフ","a":"薬丸岳","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/7663/9784065237663_1_60.jpg?_ex=600x600","tr":"A","c":"「14歳に満たない者の行為は、罰しない」この一行の重さを考えさせられる一冊です","asin":"4065237661"},"fc21ff8808ce":{"t":"放課後","a":"東野圭吾","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/2519/9784061842519_1_10.jpg?_ex=600x600","tr":"B","c":"女子高の教師が狙われる学園ミステリー！東野圭吾さんのデビュー作です","asin":"406184251X"},"1050a4d619cb":{"t":"星降り山荘の殺人","a":"倉知淳","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/7016/9784062937016_1_15.jpg?_ex=600x600","tr":"A","c":"「あくまでフェアに」の意味が読み始めてすぐにわかる！ずっと読みたかった一冊です","asin":"4062937018"},"51f05dc0659c":{"t":"冷たい密室と博士たち","a":"森博嗣","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/5607/9784062645607.jpg?_ex=600x600","tr":"B","c":"シンプルなのに緻密なトリックが芸術的。犀川さんと西之園さんのコンビも大好きです","asin":"4062645602"},"6082377d43ef":{"t":"そして誰もいなくなった","a":"アガサ・クリスティ","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/0804/9784151320804_1_8.jpg?_ex=600x600","tr":"A","c":"元祖クローズドサークル！孤島で一人ずつ消えていく緊張感は何度読んでも名作です","asin":"4151320806"},"8098de9d8329":{"t":"体育館の殺人","a":"青崎有吾","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/3115/9784488443115_1_3.jpg?_ex=600x600","tr":"A","c":"伏線とヒントが丁寧に張られた正統派。だらけているのに賢い天馬のキャラも大好きです","asin":"4488443117"},"669fe2d13082":{"t":"シャーリーホームズと緋色の憂鬱","a":"高殿円","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/2572/9784150312572.jpg?_ex=600x600","tr":"B","c":"ホームズの登場人物たちが性別を入れ替えて現代に！原作へのリスペクトが随所に光ります","asin":"4150312575"},"ca7150d1efcb":{"t":"双頭の悪魔","a":"有栖川有栖","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/4030/9784488414030_1_2.jpg?_ex=600x600","tr":"S","c":"傑作中の傑作！有栖川さんの作品の中でも1、2位を争う一冊です","asin":"4488414036"},"45ee0c79f198":{"t":"可燃物","a":"米澤穂信","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/5543/9784167925543_1_5.jpg?_ex=600x600","tr":"B","c":"短編なのに一つひとつのトリックが練られていて、長編並みの読み応え！","asin":"4167925540"},"dca950a4233e":{"t":"Invert 城塚翡翠倒叙集","a":"相沢沙呼","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/7899/9784065337899_1_3.jpg?_ex=600x600","tr":"A","c":"前作を読んでから5年、ついに読めた続編！やっぱり面白い。犯人視点も新鮮です","asin":"4065337895"},"288fd1a28dcf":{"t":"死んだ山田と教室","a":"金子玲介","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/2608/9784065452608_1_3.jpg?_ex=600x600","tr":"B","c":"男子高校生のくだらなくも楽しい日常がリアル。ミステリーの枠に収まらない良作です","asin":"4065452600"},"abf340f9d2da":{"t":"扉は閉ざされたまま","a":"石持浅海","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/4062/9784396334062.jpg?_ex=600x600","tr":"A","c":"犯人は最初からわかっている。謎は「なぜ扉を開けさせないのか」という発想が面白い！","asin":"B0732NXDT9"},"f83d92aefc28":{"t":"オリエント急行の殺人","a":"アガサ・クリスティ","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/0089/9784151310089_1_2.jpg?_ex=600x600","tr":"A","c":"雪に閉ざされた豪華列車での殺人！ポアロの推理が光る不朽の名作","asin":"4151310088"},"53f99d689fd3":{"t":"謎解きはディナーのあとで","a":"東川篤哉","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/rakutenkobo-ebooks/cabinet/9690/2000000169690.jpg?_ex=600x600","tr":"B","c":"影山とお嬢様の掛け合いがとにかく楽しい！ミステリー1冊目に自信を持っておすすめできます","asin":"4094087575"},"fba8c1f3527f":{"t":"人形館の殺人","a":"綾辻行人","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/rakutenkobo-ebooks/cabinet/6323/2000002136323.jpg?_ex=600x600","tr":"B","c":"前3作とはまた違う雰囲気の館シリーズ！ついに読めてうれしい一冊です","asin":"4062767163"},"b338666f66b3":{"t":"硝子の塔の殺人","a":"知念実希人","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/9766/9784408559766_1_2.jpg?_ex=600x600","tr":"S","c":"知念さんのミステリー愛があふれる一冊！作中に出てくる名作も読みたくなります","asin":"4408559768"},"12f6ed1900fc":{"t":"白夜行","a":"東野圭吾","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/rakutenkobo-ebooks/cabinet/8342/2000008388342.jpg?_ex=600x600","tr":"S","c":"亮司と雪穂の19年を描く大長編！周りの人の視点で描かれる構成が見事です","asin":"4087474399"},"fbbee7bd9ead":{"t":"十角館の殺人","a":"綾辻行人","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/8574/9784062758574_1_2.jpg?_ex=600x600","tr":"S","c":"2回目でもしっかり楽しめた、緻密に練り上げられた名作！","asin":"4062758571"},"e1b2133a8e7e":{"t":"名探偵の掟","a":"東野圭吾","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/0626/06264618.jpg?_ex=600x600","tr":"B","c":"ミステリーのお約束を笑い飛ばす短編集！ミステリー好きほど楽しめます","asin":"4062646188"},"207c53c07d0d":{"t":"容疑者Xの献身","a":"東野圭吾","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/0123/9784167110123_1_35.jpg?_ex=600x600","tr":"S","c":"天才数学者・石神の献身が切ない！ガリレオシリーズ屈指の名作です","asin":"4167110121"},"b3a5a5dd4532":{"t":"方舟","a":"夕木春央","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/2686/9784065292686_1_3.jpg?_ex=600x600","tr":"S","c":"消去法で犯人を絞り込む謎解きが見事。再読しても新しい発見があった、最上級の一冊です","asin":"4065292689"},"32ca27180216":{"t":"ユリゴコロ","a":"沼田まほかる","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/6425/9784575516425.jpg?_ex=600x600","tr":"A","c":"ノートに綴られた告白の不気味さにゾクッ！愛の物語でもあります","asin":"4575516422"},"a6143ed263d5":{"t":"シャーロックホームズの凱旋","a":"森見登美彦","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/8260/9784122078260_1_3.jpg?_ex=600x600","tr":"B","c":"推理しないホームズという異色作が新鮮。妄想と現実が入り乱れる展開で読む手が止まらない","asin":"4122078261"},"f8e54ced2b11":{"t":"すべてがFになる","a":"森博嗣","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/9248/9784062639248_1_23.jpg?_ex=600x600","tr":"S","c":"孤島の研究所で起きる密室殺人！理系ミステリーの原点です","asin":"4062639246"},"c3206dbc3b9f":{"t":"ある閉ざされた雪の山荘で","a":"東野圭吾","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/9098/9784061859098.jpg?_ex=600x600","tr":"B","c":"とても読みやすいのでおすすめ！映画を見る前に再読しました","asin":"4061859099"},"6273876176ed":{"t":"孤島パズル","a":"有栖川有栖","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/rakutenkobo-ebooks/cabinet/9801/2000000149801.jpg?_ex=600x600","tr":"S","c":"『双頭の悪魔』で気になっていた事件をついに読めた！孤島のクローズドサークルです","asin":"4488414028"}};       // {id:{t, a, img, tr, c, asin}}
+const AMAZON_TAG = "daisomystery-22";
+const TIER_T = { S: "人生ベスト級", A: "人に強く薦めたい", B: "面白かった", C: "自分には合わなかった" };
+const W = "日月火水木金土";
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const app = document.getElementById("app");
+// 日本時間の今日（ストーリーの投稿日とそろえる）
+const TODAY = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
+const OPEN = MAME.filter(m => m.d <= TODAY).sort((a, b) => a.d < b.d ? 1 : -1);   // 公開済み（新しい順）
+const P = new URLSearchParams(location.search);
+const FROM = (() => { const v = P.get("from") || P.get("utm_source") || ""; return /^[A-Za-z0-9_-]{1,20}$/.test(v) ? v.toLowerCase() : "" })();
+const dLabel = d => `${+d.slice(5, 7)}/${+d.slice(8)}（${W[new Date(d + "T12:00:00Z").getUTCDay()]}）`;
+const ev = (n, p) => { if (typeof gtag === "function") try { gtag("event", n, p) } catch (e) {} };
+
+function frame(inner, label) {
+  return `<section class="card screen q"><div class="card-head"><span class="latin">Mystery Trivia</span><span class="num">${esc(label || "")}</span></div>
+    <div class="card-body mm-body">${inner}</div></section>`;
+}
+function amazonUrl(b) {
+  const tag = AMAZON_TAG ? "tag=" + encodeURIComponent(AMAZON_TAG) : "";
+  if (b.asin) return `https://www.amazon.co.jp/dp/${b.asin}${tag ? "?" + tag : ""}`;
+  return `https://www.amazon.co.jp/s?k=${encodeURIComponent(b.t + " " + (b.a || ""))}&i=stripbooks${tag ? "&" + tag : ""}`;
+}
+function bookItem(id) {
+  const b = DB[id]; if (!b) return "";
+  const img = b.img ? `<img alt="" loading="lazy" src="${esc(b.img)}" onload="if(this.naturalWidth<10)this.remove()" onerror="this.remove()">` : "";
+  return `<li class="mm-book"><div class="mm-cover" aria-hidden="true">${esc(b.t.length > 16 ? b.t.slice(0, 15) + "…" : b.t)}${img}</div>
+    <div style="display:grid;gap:4px;min-width:0"><span class="mm-bt">${esc(b.t)}</span><span class="mm-ba">${esc(b.a || "")}</span>
+    ${b.tr ? `<span class="mm-tier">${esc(b.tr)}　${esc(TIER_T[b.tr] || "")}</span>` : ""}
+    ${b.c ? `<p class="mm-cmt">${esc(b.c)}</p>` : ""}
+    <div class="mm-acts"><a href="../#book=${esc(id)}" data-bk="${esc(id)}">本棚で詳しく</a><a href="${esc(amazonUrl(b))}" target="_blank" rel="noopener sponsored" data-amz="${esc(id)}">Amazonで見る</a></div></div></li>`;
+}
+function pastList(cur) {
+  const list = OPEN.filter(m => m.d !== cur);
+  if (!list.length) return "";
+  return `<h3 class="mm-sec">これまでの豆知識</h3><ul class="mm-past">${list.map(m => `<li><a href="?d=${m.d}"><span>${+m.d.slice(5, 7)}/${+m.d.slice(8)}</span>${esc(m.q)}</a></li>`).join("")}</ul>`;
+}
+function render(m) {
+  if (!m) {
+    const first = MAME.map(x => x.d).sort()[0];
+    app.innerHTML = frame(`<h2 class="mm-q">ミステリー豆知識は ${first ? `${+first.slice(5, 7)}月${+first.slice(8)}日` : "近日"} から始まります</h2>
+      <p class="hint">Instagram（@daiso_mysterylover）のストーリーで出した2択クイズの答えを、ここで発表します。そのあいだに、あなたにぴったりの1冊を診断で探してみませんか。</p>
+      <a class="btn seal" href="../?from=mame" style="text-decoration:none;justify-self:start">診断をはじめる</a>`, "");
+    return;
+  }
+  const isToday = m.d === TODAY;
+  const right = m.ans === "A" ? m.a : m.b;
+  app.innerHTML = frame(`
+    <span class="mm-date">${isToday ? "今日の豆知識" : "豆知識"}　${esc(m.cat)}</span>
+    <h2 class="mm-q">${esc(m.q)}</h2>
+    <div class="mm-opts" id="opts">
+      <button class="mm-opt" data-k="A"><b>A</b>${esc(m.a)}</button>
+      <button class="mm-opt" data-k="B"><b>B</b>${esc(m.b)}</button>
+    </div>
+    <button class="linkbtn" id="show" style="justify-self:start">選ばずに答えを見る</button>
+    <div class="mm-ans" id="ans" hidden>
+      <p class="mm-verdict" id="verdict"></p>
+      <h3>正解は ${esc(m.ans)}「${esc(right)}」</h3>
+      <p>${esc(m.exp)}</p>
+      <p class="mm-src">出典：${m.url ? `<a href="${esc(m.url)}" target="_blank" rel="noopener">${esc(m.src)}</a>` : esc(m.src)}</p>
+    </div>
+    <div id="more" hidden style="display:grid;gap:14px">
+      ${m.books.length ? `<h3 class="mm-sec">この豆知識につながる本</h3><ul class="mm-books">${m.books.map(bookItem).join("")}</ul>` : ""}
+      <div style="display:grid;gap:8px;border-top:1px solid var(--rule);padding-top:12px">
+        <p style="margin:0"><b>あなたにぴったりの1冊は？</b><br><span class="hint">いくつかの質問に答えるだけで、だいそうの読了本から3冊を選びます。</span></p>
+        <a class="btn seal" href="../?from=mame" style="text-decoration:none;justify-self:start">診断をはじめる</a>
+      </div>
+      <p class="hint">明日の豆知識は、Instagram（@daiso_mysterylover）のストーリーで出題します。</p>
+    </div>
+    ${pastList(m.d)}`, dLabel(m.d));
+  const reveal = k => {
+    document.querySelectorAll(".mm-opt").forEach(b => { b.disabled = true; if (b.dataset.k === m.ans) b.classList.add("ok"); else if (b.dataset.k === k) b.classList.add("ng") });
+    document.getElementById("verdict").textContent = k ? (k === m.ans ? "正解！ さすがです。" : "おしい！ 正解はこちら。") : "";
+    document.getElementById("ans").hidden = false; document.getElementById("more").hidden = false; document.getElementById("show").hidden = true;
+    ev("mame_answer", { d: m.d, pick: k || "none", correct: k ? String(k === m.ans) : "none", from: FROM || "direct" });
+  };
+  document.querySelectorAll(".mm-opt").forEach(b => b.onclick = () => reveal(b.dataset.k));
+  document.getElementById("show").onclick = () => reveal("");
+  app.addEventListener("click", e => {
+    const a = e.target.closest("a[data-amz],a[data-bk]"); if (!a) return;
+    ev(a.dataset.amz ? "mame_amazon" : "mame_shelf", { d: m.d, book: a.dataset.amz || a.dataset.bk });
+  });
+}
+const want = P.get("d");
+const cur = (/^\d{4}-\d{2}-\d{2}$/.test(want || "") && OPEN.find(m => m.d === want)) || OPEN[0] || null;
+render(cur);
+ev("mame_view", { d: cur ? cur.d : "none", from: FROM || "direct" });
+</script>
+
+</body>
+</html>
