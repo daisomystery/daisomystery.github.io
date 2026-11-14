@@ -801,7 +801,7 @@ async function openReadStory(kind) {
   const ov = document.createElement("div"); ov.className = "rk-ov";
   ov.innerHTML = `<div class="rk-ov-card card"><button class="x rk-ov-x" aria-label="閉じる">×</button><div class="card-head"><span class="latin">For Your Stories</span></div>
     <div class="card-body" style="display:grid;gap:12px"><div class="rk-mode" role="tablist"><button class="rk-mode-b" data-who="me" aria-selected="true">わたしの読了</button><button class="rk-mode-b" data-who="dai" aria-selected="false">だいそうの読了</button></div>
-    <div class="rk-mode" role="tablist" aria-label="画像の形"><button class="rk-mode-b" data-fmt="story" aria-selected="true">縦長（ストーリーズ）</button><button class="rk-mode-b" data-fmt="wide" aria-selected="false">横長（A4横）</button></div>
+    <div class="rk-mode" role="tablist" aria-label="画像の形"><button class="rk-mode-b" data-fmt="story" aria-selected="true">縦長（ストーリーズ）</button><button class="rk-mode-b" data-fmt="wide" aria-selected="false">横長（スレッズ・X）</button></div>
     ${eras.length > 2 ? `<div class="rk-mode" role="tablist" aria-label="時代">${eras.map(x => `<button class="rk-mode-b" data-era="${x[0]}" aria-selected="${x[0] === "all"}">${x[1]}</button>`).join("")}</div>` : ""}
     <div class="rk-ov-body"><p class="hint">画像をつくっています…</p></div></div></div>`;
   document.body.appendChild(ov); document.body.style.overflow = "hidden";

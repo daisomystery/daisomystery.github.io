@@ -2087,7 +2087,7 @@ async function openStory(recs, wish, fmt = "story") {
   const canShare = file && navigator.canShare && navigator.canShare({ files: [file] });
   const inApp = /Instagram|FBAN|FBAV|Line\//i.test(navigator.userAgent);
   dlg.querySelector(".card-body").innerHTML = `
-    <div class="fmt-tabs" role="tablist" aria-label="画像の形"><button class="chip-btn" data-fmt="story" aria-pressed="${fmt === "story"}">縦長（ストーリーズ）</button><button class="chip-btn" data-fmt="wide" aria-pressed="${fmt === "wide"}">横長（A4横）</button></div>
+    <div class="fmt-tabs" role="tablist" aria-label="画像の形"><button class="chip-btn" data-fmt="story" aria-pressed="${fmt === "story"}">縦長（ストーリーズ）</button><button class="chip-btn" data-fmt="wide" aria-pressed="${fmt === "wide"}">横長（スレッズ・X）</button></div>
     <img class="story${fmt === "wide" ? " wide" : ""}" src="${url}" alt="診断結果の${fmt === "wide" ? "横長" : "ストーリーズ用"}画像：おすすめ3冊">
     <div style="display:flex;gap:8px;flex-wrap:wrap">${canShare
       ? `<button class="btn seal" id="doSave">写真に保存</button><button class="btn ghost" id="doShare">共有する</button>`
