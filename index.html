@@ -961,7 +961,7 @@ function wishOf() {
 /* ===== だいそうの評価（ティア）。総合評価は5軸の平均ではなくティアで表す（2026-11-01 付け直し）
    tw＝推薦の重みに使うティア（推計は B 扱い）、tr＝画面に出すティア（推計は出さない）、sr＝S内順位 */
 const TIER_W = { SS: 1.2, S: 0.8, A: 0.4, B: 0, C: 0 };   // 2026-11-14 SS〜Cの5段階に変更（旧Sの重み1.2はSSへ）
-const TIER_T = { SS: "人生ベスト級", S: "人に強く薦めたい", A: "おすすめ", B: "面白かった", C: "自分には合わなかった" };
+const TIER_T = { SS: "人生ベスト級", S: "人に強く薦めたい", A: "おすすめ", B: "面白かった", C: "刺さる人には刺さる" };
 const TIER_ORDER = { SS: 0, S: 1, A: 2, B: 3, C: 4 };
 function tierLine(b) {
   if (!b.tr) return "";
@@ -1798,7 +1798,7 @@ function renderShelf() {
     <span class="latin">The Reading Room</span>
     <div class="shelf-h"><h2>だいそうの本棚</h2>${mascot("back", "気になる表紙があれば、<br>手に取ってみてください。", "shelf-m", "left")}</div>
     <p>${esc(CONFIG.ACCOUNT)} が読んだミステリー ${BOOKS.length} 冊。条件を選ぶほど本が絞り込まれていきます。表紙をタップすると、あらすじと感想、評価が見られます。</p>
-    <p class="tier-legend"><b>だいそうの評価</b>　SS＝人生ベスト級／S＝人に強く薦めたい／A＝おすすめ／B＝面白かった／C＝自分には合わなかった（Cの本はおすすめには出しません）</p>
+    <p class="tier-legend"><b>だいそうの評価</b>　SS＝人生ベスト級／S＝人に強く薦めたい／A＝おすすめ／B＝面白かった／C＝刺さる人には刺さる（Cの本はおすすめには出しません）</p>
   </section>
   ${carousel("carShelf", "shelf")}
   <section class="filters screen" aria-label="本の絞り込み">
