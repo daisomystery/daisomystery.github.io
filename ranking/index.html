@@ -396,6 +396,8 @@ dialog.detail .card { max-height: calc(100vh - 48px); max-height: calc(100dvh - 
 .awd h4 { margin: 0; font-size: 11.5px; letter-spacing: .12em; color: var(--oxblood) }
 .awd ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 3px; font-size: 13.5px }
 .awd li { display: flex; gap: 8px; align-items: baseline }
+.se-link { display: block; margin: 4px 0; padding: 10px 12px; border: 1px solid var(--gold); border-radius: 2px; color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; background: var(--parch-deep) }
+.se-link:hover { border-color: var(--oxblood); color: var(--oxblood) }
 .awd-link { color: var(--ink); text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 3px }
 .awd-link:hover { color: var(--oxblood) }
 .awd-note { margin: 2px 0 0; font-size: 11px; color: var(--ink-soft) }
@@ -592,7 +594,7 @@ function renderYear() {
       <div class="rk-badges">${b ? `<span class="rk-read">だいそう読了${b.tr ? "・" + esc(b.tr) + "ランク" : ""}</span>` : ""}${also ? `<span class="rk-also">ほかに：${also}</span>` : ""}</div>
       ${b && b.c ? `<p class="rk-comment">${esc(b.c)}</p>` : ""}
       <div class="rk-actions"><button class="my ${mine ? "on" : ""}" data-k="${esc(e.key)}" aria-pressed="${mine}">${mine ? "✓ 読んだ" : "読んだ"}</button>
-        ${b ? `<a href="../#book=${e.bid}">本棚で見る</a>` : ""}<a href="${esc(amazonUrl(e))}" target="_blank" rel="noopener sponsored">Amazonで見る</a></div></div></li>` }).join("")}</ol>`;
+        ${b ? `<a href="../#book=${e.bid}">本棚で見る</a>` : ""}<a href="${esc(amazonUrl(e))}" target="_blank" rel="noopener sponsored">Amazonで見る</a></div>${serBtns(e) ? `<div class="rk-chips">${serBtns(e)}</div>` : ""}</div></li>` }).join("")}</ol>`;
 }
 function renderTop() {
   const years = [...new Set(E.filter(e => e.rk === 1).map(e => annYear(e.r, e.y)))].sort((a, b) => b - a);
@@ -615,7 +617,7 @@ function awItem(e, small) {
     <div class="rk-badges">${b ? `<span class="rk-read">だいそう読了${b.tr ? "・" + esc(b.tr) + "ランク" : ""}</span>` : ""}${also ? `<span class="rk-also">ほかに：${also}</span>` : ""}</div>
     ${b && b.c && !small ? `<p class="rk-comment">${esc(b.c)}</p>` : ""}
     <div class="rk-actions"><button class="my ${mine ? "on" : ""}" data-k="${esc(e.key)}" aria-pressed="${mine}">${mine ? "✓ 読んだ" : "読んだ"}</button>
-      ${b ? `<a href="../#book=${e.bid}">本棚で見る</a>` : ""}<a href="${esc(amazonUrl(e))}" target="_blank" rel="noopener sponsored">Amazonで見る</a></div></div></li>`;
+      ${b ? `<a href="../#book=${e.bid}">本棚で見る</a>` : ""}<a href="${esc(amazonUrl(e))}" target="_blank" rel="noopener sponsored">Amazonで見る</a></div>${serBtns(e) ? `<div class="rk-chips">${serBtns(e)}</div>` : ""}</div></li>`;
 }
 function renderAward() {
   const L = A.filter(e => e.aw === ST.aw), nos = [...new Set(L.map(e => e.no))].sort((a, b) => b - a);
@@ -638,6 +640,8 @@ const auKey = a => norm((a || "").replace(/[（(][^）)]*[）)]/g, ""));
 const auBtn = a => `<button class="rk-au" data-au="${esc(a)}" aria-label="${esc(a)}の作品を一覧で見る">${esc(a)}</button>`;
 const appLabel = e => e.aw ? `${esc(AMAP[e.aw].name)} ${noLabel(e)} ${esc(e.kind)}` : `${esc(RMAP[e.r].name)} ${yLabel(e.r, e.y)} ${e.rk}位`;
 const evYear = e => e.aw ? (e.y || 0) : annYear(e.r, e.y);   // 発表した年
+const SER_OF = {}; SB.forEach(x => x.books.forEach(b => (SER_OF[b.key] = SER_OF[b.key] || []).push(x)));
+const serBtns = e => (SER_OF[e.key] || []).filter(x => !(ST.mode === "series" && ST.se === x.k)).map(x => `<button class="se-card se-chip" data-se="${esc(x.k)}">${esc(x.name)}を見る ›</button>`).join("");
 function workItem(e, label) {
   const b = e.bid && DB[e.bid], mine = MY.has(e.key), also = alsoIn(e);
   return `<li class="rk-item rk-item2">${cover(e)}<div class="rk-body"><div class="rk-lab">${label}</div>
@@ -645,7 +649,7 @@ function workItem(e, label) {
     <div class="rk-badges">${b ? `<span class="rk-read">だいそう読了${b.tr ? "・" + esc(b.tr) + "ランク" : ""}</span>` : ""}${also ? `<span class="rk-also">ほかに：${also}</span>` : ""}</div>
     ${b && b.c ? `<p class="rk-comment">${esc(b.c)}</p>` : ""}
     <div class="rk-actions"><button class="my ${mine ? "on" : ""}" data-k="${esc(e.key)}" aria-pressed="${mine}">${mine ? "✓ 読んだ" : "読んだ"}</button>
-      ${b ? `<a href="../#book=${e.bid}">本棚で見る</a>` : ""}<a href="${esc(amazonUrl(e))}" target="_blank" rel="noopener sponsored">Amazonで見る</a></div></div></li>`;
+      ${b ? `<a href="../#book=${e.bid}">本棚で見る</a>` : ""}<a href="${esc(amazonUrl(e))}" target="_blank" rel="noopener sponsored">Amazonで見る</a></div>${serBtns(e) ? `<div class="rk-chips">${serBtns(e)}</div>` : ""}</div></li>`;
 }
 const appRank = e => e.aw ? (WIN(e.kind) ? 0 : e.kind === "候補" ? 3 : 1.5) : e.rk === 1 ? 1 : 2 + e.rk / 100;   // 代表にする順（受賞＞1位＞ほかの順位＞候補）
 function authorWorks() {   // その作家の、ランキング・受賞歴のある作品（1作1件。いちばん良い結果を代表にし、ほかは「ほかに：」に出す）
@@ -683,7 +687,7 @@ function renderSeriesList() {
 function renderSeries() {
   const x = SMAP[ST.se]; if (!x) return renderSeriesList();
   const c = serCount(x);
-  return `<button class="rk-back" id="seBack">‹ シリーズ一覧</button>
+  return `<button class="rk-back" id="seBack">‹ ほかのシリーズを見る</button>
     <h3 class="au-name">${esc(x.name)}</h3>
     <p class="hint" style="margin:0">${auBtn(x.a)}・刊行順に全${c.all}作</p>
     <p class="rk-tally">全${c.all}作のうち、あなたは <b>${c.me}</b> 作読破（だいそうは${c.dai}作）</p>
@@ -837,7 +841,7 @@ function render() {
   app.innerHTML = `<section class="card screen"><div class="card-head"><span class="latin">Mystery Rankings</span><span class="num">${{ award: "主な受賞作", birth: "生まれ年", author: "作家", series: "シリーズ" }[ST.mode] || "国内4大ランキング"}</span></div>
     <div class="card-body rk-head" style="display:grid;gap:14px">
       <h2>歴代ミステリーランキング・受賞作</h2>
-      <div class="rk-mode" role="tablist" aria-label="表示"><button role="tab" class="rk-mode-b" data-mode="rank" aria-selected="${ST.mode === "rank" || ST.mode === "birth"}">ランキング</button><button role="tab" class="rk-mode-b" data-mode="award" aria-selected="${ST.mode === "award"}">受賞作</button>${SB.length ? `<button role="tab" class="rk-mode-b" data-mode="series" aria-selected="${ST.mode === "series"}">シリーズ</button>` : ""}</div>
+      <div class="rk-mode" role="tablist" aria-label="表示"><button role="tab" class="rk-mode-b" data-mode="rank" aria-selected="${ST.mode === "rank" || ST.mode === "birth"}">ランキング</button><button role="tab" class="rk-mode-b" data-mode="award" aria-selected="${ST.mode === "award"}">受賞作</button></div>
       <p class="hint">${{ award: "国内の主なミステリー賞6つの、歴代の受賞作です（日本推理作家協会賞・本格ミステリ大賞は候補作も）。", birth: "生まれた年を選ぶと、その年に発表されたランキングの1位と、賞の受賞作がわかります。", author: "作家ごとに、ランキング・賞に入った作品をまとめました。", series: "シリーズものを刊行順に並べ、全巻の読破状況がわかるようにしました。" }[ST.mode] || "国内の主なミステリーランキング4つの、歴代1位〜10位です。"}作家名を押すと、その作家の作品がまとめて見られます。だいそうが読んだ本には一言を付けています。読んだ本に印を付けると、あなたの読破数がわかります（印はこの端末だけに保存されます）。</p>
       ${ST.mode === "award" ? awControls() + renderAward() : ST.mode === "birth" ? controls() + renderBirth() : ST.mode === "author" ? renderAuthor() : ST.mode === "series" ? renderSeries() : controls() + (ST.view === "top" ? renderTop() : renderYear())}
       <p class="rk-note">順位・受賞は各ランキング・各賞の発表をもとに当サイトがまとめたものです。各ランキング・賞の名称は、それぞれの主催者の商標です。誤りにお気づきの場合は、Instagram（@daiso_mysterylover）のDMでお知らせください。</p>
@@ -877,6 +881,8 @@ function render() {
   });
 }
 // 本のカードから来たとき（#r-kono-2020-作品ID／#a-honmisu-19-作品ID）は、その年・回を開いて作品を光らせる
+const SHASH = (location.hash || "").match(/^#s-(.+)$/);
+if (SHASH) { const k = decodeURIComponent(SHASH[1]); if (SMAP[k]) Object.assign(ST, { mode: "series", se: k }) }
 const HASH = (location.hash || "").match(/^#(r|a)-([a-z]+)-(\d+)(?:-([0-9a-f]{12}))?$/);
 if (HASH && HASH[1] === "r" && RMAP[HASH[2]]) Object.assign(ST, { mode: "rank", view: "year", r: HASH[2], y: +HASH[3] });
 else if (HASH && HASH[1] === "a" && AMAP[HASH[2]]) Object.assign(ST, { mode: "award", aw: HASH[2] });
