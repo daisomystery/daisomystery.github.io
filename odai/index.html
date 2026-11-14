@@ -251,6 +251,10 @@ a.tab { text-decoration: none; display: inline-flex; align-items: center }
   background: var(--oxblood); color: #f7ecd3; font-size: 12px; box-shadow: 0 2px 4px rgba(0,0,0,.5) }
 .face .readmark { position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); z-index: 2; background: rgba(23,12,13,.85); color: #f1e6cc; font-size: 9px; padding: 1px 6px; border: 1px solid var(--gold-bright) }
 img.story { width: 100%; max-width: 320px; justify-self: center; border: 1px solid var(--gold); aspect-ratio: 9 / 16 }
+img.story.wide { max-width: 100%; aspect-ratio: 1600 / 1131 }
+.fmt-tabs { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--rule); border-radius: 2px; overflow: hidden }
+.fmt-tabs .chip-btn { font: inherit; font-size: 13px; padding: 8px 6px; border: 0; background: var(--parch); color: var(--ink); cursor: pointer }
+.fmt-tabs .chip-btn[aria-pressed="true"] { background: var(--oxblood); color: #f7ecd3; font-weight: 700 }
 .nudge { margin: 0; font-size: 13px; color: var(--oxblood); font-weight: 700 }
 .history { display: grid; gap: 10px }
 .h-item { display: grid; gap: 4px; padding-bottom: 10px; border-bottom: 1px dotted var(--rule) }
