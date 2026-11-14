@@ -500,6 +500,7 @@ dialog.detail .card { max-height: calc(100vh - 48px); max-height: calc(100dvh - 
 .rk-au { font: inherit; font-size: 13px; color: var(--ink-soft); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline dotted; text-underline-offset: 3px; text-align: left }
 .rk-au:hover { color: var(--oxblood) }
 .rk-item2 { grid-template-columns: 64px 1fr }
+.rk-ov [data-fmt] { font-size: 13px; padding-inline: 4px }
 .se-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px }
 .se-card { width: 100%; text-align: left; display: grid; gap: 4px; padding: 12px 14px; border: 1px solid var(--rule); border-radius: 3px; background: var(--parch); color: var(--ink); font: inherit; cursor: pointer }
 .se-card:hover { border-color: var(--oxblood) }
@@ -819,7 +820,7 @@ async function openReadStory(kind) {
     const url = cv.toDataURL("image/png"), blob = await new Promise(r => cv.toBlob(r, "image/png"));
     const file = blob && new File([blob], "nazobon-dokuha.png", { type: "image/png" });
     const canShare = file && navigator.canShare && navigator.canShare({ files: [file] }), inApp = /Instagram|FBAN|FBAV|Line\//i.test(navigator.userAgent);
-    body.innerHTML = `<img class="story" src="${url}" alt="${esc(set.title + " " + set.sub)}の読破数の画像" style="width:100%;border-radius:4px">
+    body.innerHTML = `<img class="story${fmt === "wide" ? " wide" : ""}" src="${url}" alt="${esc(set.title + " " + set.sub)}の読破数の画像" style="width:100%;max-width:100%;border-radius:4px;aspect-ratio:${fmt === "wide" ? "1600 / 1131" : "9 / 16"}">
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">${canShare ? `<button class="btn seal" id="rkSave">写真に保存</button><button class="btn ghost" id="rkShare">共有する</button>` : inApp ? "" : `<a class="btn seal" href="${url}" download="nazobon-dokuha.png">画像を保存</a>`}</div>
       <p class="hint">${canShare ? "「写真に保存」を押して、出てきたメニューの「画像を保存」を選ぶと写真アプリに入ります。" : "画像を長押しして「写真に追加」（Androidは「画像をダウンロード」）を選ぶと写真アプリに入ります。"}${fmt === "wide" ? "スレッズやXなどで、" : "ストーリーズで "}${ACCOUNT} をメンションしてシェアしてください。</p>`;
     const sv = body.querySelector("#rkSave"); if (sv) sv.onclick = () => navigator.share({ files: [file] }).catch(() => {});
