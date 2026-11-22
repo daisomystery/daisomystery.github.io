@@ -476,8 +476,8 @@ dialog.detail .card { max-height: calc(100vh - 48px); max-height: calc(100dvh - 
 .rk-cell.rk-jump:hover { text-decoration: underline }
 .rk-cell.dr { color: var(--oxblood); font-weight: 700 } .rk-cell.ur { color: #2f6b3a; font-weight: 700 }
 .rk-cell { display: grid !important; grid-template-columns: 40px 1fr; gap: 8px; align-items: start }
-.rk-cell-cv { width: 40px; aspect-ratio: 2 / 3; background: var(--rule); border-radius: 2px; overflow: hidden; display: block }
-.rk-cell-cv img { width: 100%; height: 100%; object-fit: cover; display: block }
+.rk-cell-cv { position: relative; width: 40px; height: 60px; background: var(--rule); border-radius: 2px; overflow: hidden; display: block }
+.rk-cell-cv img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block }
 .rk-cell-tx { min-width: 0 }
 .rk-mode { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; border: 1px solid var(--rule); border-radius: 2px; overflow: hidden }
 .rk-mode-b { font: inherit; font-size: 15px; font-weight: 700; padding: 10px; border: 0; background: var(--parch); color: var(--ink); cursor: pointer }
