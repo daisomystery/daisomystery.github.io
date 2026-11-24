@@ -438,6 +438,15 @@ dialog.detail .card { max-height: calc(100vh - 48px); max-height: calc(100dvh - 
 .odai-note textarea { font: inherit; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 2px; background: var(--parch); color: var(--ink); width: 100%; resize: vertical }
 .odai-meta { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; color: var(--ink-soft) }
 .odai-meta small { font-size: 11.5px; line-height: 1.6 }
+
+/* Instagramへのボタン（2026-11-25） */
+.ig-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border: 1px solid var(--oxblood); border-radius: 999px; color: var(--oxblood); background: var(--parch); font-weight: 700; font-size: 14px; text-decoration: none; line-height: 1.3 }
+.ig-btn:hover { background: var(--oxblood); color: #fff }
+.ig-btn svg { flex: none }
+.ig-foot { margin: 0 0 14px }
+.ig-link { color: inherit; text-decoration: underline; text-underline-offset: 2px }
+.ig-cta { display: grid; gap: 10px; justify-items: start; padding: 16px 18px; background: var(--parch); color: var(--ink); border: 1px solid var(--gold); border-radius: 4px }
+.ig-cta p { margin: 0 }
 </style>
 </head>
 <body>
@@ -485,7 +494,7 @@ dialog.detail .card { max-height: calc(100vh - 48px); max-height: calc(100dvh - 
   <p>このページの内容や、送った回答の削除のご希望は、Instagram（@daiso_mysterylover）のDMまでお願いします。内容は必要に応じて見直し、このページでお知らせします。</p>
   <p><a class="btn seal" href="../" style="text-decoration:none;display:inline-block">診断にもどる</a></p>
 </div></section>
-</main>
+</main><footer class="foot wrap" style="margin-top:24px"><p class="ig-foot"><a class="ig-btn" href="https://www.instagram.com/daiso_mysterylover/" target="_blank" rel="noopener" data-ig="privacy"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg><span>Instagramでミステリーを紹介しています</span></a></p></footer><script>document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("[data-ig]");if(a&&typeof gtag==="function")try{gtag("event","book_click",{click_kind:"instagram",place:a.dataset.ig})}catch(x){}})</script>
 <style>
 .pv h2 { margin: 0 0 6px }
 .pv h3 { margin: 18px 0 4px; font-size: 1.05rem; border-left: 3px solid var(--oxblood); padding-left: 8px }

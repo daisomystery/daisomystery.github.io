@@ -439,6 +439,15 @@ dialog.detail .card { max-height: calc(100vh - 48px); max-height: calc(100dvh - 
 .odai-note textarea { font: inherit; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 2px; background: var(--parch); color: var(--ink); width: 100%; resize: vertical }
 .odai-meta { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; color: var(--ink-soft) }
 .odai-meta small { font-size: 11.5px; line-height: 1.6 }
+
+/* Instagramへのボタン（2026-11-25） */
+.ig-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border: 1px solid var(--oxblood); border-radius: 999px; color: var(--oxblood); background: var(--parch); font-weight: 700; font-size: 14px; text-decoration: none; line-height: 1.3 }
+.ig-btn:hover { background: var(--oxblood); color: #fff }
+.ig-btn svg { flex: none }
+.ig-foot { margin: 0 0 14px }
+.ig-link { color: inherit; text-decoration: underline; text-underline-offset: 2px }
+.ig-cta { display: grid; gap: 10px; justify-items: start; padding: 16px 18px; background: var(--parch); color: var(--ink); border: 1px solid var(--gold); border-radius: 4px }
+.ig-cta p { margin: 0 }
 </style>
 </head>
 <body>
@@ -1034,8 +1043,11 @@ function ledger() {
   const best = S.bests.length ? `<div><span class="latin">Fav.</span><span>${S.odai ? "お題の1冊" : "好きな本"}：${S.bests.map(x => esc(x.t)).join("／")}</span></div>` : "";
   return rows || best ? `<div class="ledger">${rows}${best}</div>` : "";
 }
+const IG_URL = "https://www.instagram.com/daiso_mysterylover/";
+const IG_ICON = `<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>`;
 function footer() {
   return `<footer class="foot">
+    <p class="ig-foot"><a class="ig-btn" href="${IG_URL}" target="_blank" rel="noopener" data-ig="footer">${IG_ICON}<span>Instagramでミステリーを紹介しています</span></a></p>
     <p>当サイトはAmazonのアソシエイトとして、適格販売により収入を得ています。また、楽天アフィリエイトに参加しています。購入ボタンには広告（PR）リンクを含みます。<a href="privacy/">プライバシーと広告について</a></p>
     <p>おすすめは ${esc(CONFIG.ACCOUNT)} の読了本から選んでいます。あらすじにネタバレは含みません。</p>
     <details class="about"><summary>このサイトについて</summary>
@@ -1044,7 +1056,7 @@ function footer() {
       <p>アクセス状況の把握のため、Googleアナリティクスを使っています。Googleアナリティクスは Cookie を使って、個人を特定しない形でアクセス情報を集めます。詳しくは<a href="https://policies.google.com/technologies/partner-sites?hl=ja" target="_blank" rel="noopener">Googleのポリシー</a>をご覧ください。</p>
       <p>診断の履歴と「読みたい／読んだ」の記録は、お使いのブラウザに保存されます。引き継ぎコードを使った場合だけ、そのコードに結びつけた本のリストを集計用のシートに保存します。</p>
       <p>書影の一部は楽天ブックスの書誌データを利用しています。<a href="https://developers.rakuten.com/" target="_blank" rel="noopener">Supported by Rakuten Developers</a></p>
-      <p>お問い合わせは Instagram（${esc(CONFIG.ACCOUNT)}）のDMまでお願いします。</p>
+      <p>お問い合わせは <a class="ig-link" href="${IG_URL}" target="_blank" rel="noopener" data-ig="text">Instagram（${esc(CONFIG.ACCOUNT)}）</a>のDMまでお願いします。</p>
     </details></footer>`;
 }
 function rakutenUrl(b) {
@@ -1235,7 +1247,7 @@ function renderOdai(f) {
   app.innerHTML = qFrame(f, `
       <span class="chip" style="justify-self:start">今月のお題</span>
       <h2 class="odai-title">${esc(ODAI.br || ODAI.title).replace(/\n/g, "<br>")}</h2>
-      <p class="hint">1冊だけ選んでください（答えなくても結果は見られます）。集まった票は、Instagram（@daiso_mysterylover）で「フォロワーが選んだおすすめミステリー」として紹介します。選んだ本は、おすすめの推理にも使います。</p>
+      <p class="hint">1冊だけ選んでください（答えなくても結果は見られます）。集まった票は、<a class="ig-link" href="https://www.instagram.com/daiso_mysterylover/" target="_blank" rel="noopener" data-ig="text">Instagram（@daiso_mysterylover）</a>で「フォロワーが選んだおすすめミステリー」として紹介します。選んだ本は、おすすめの推理にも使います。</p>
       <ol class="slots">${slot}</ol>
       <div class="field odai-note" id="odaiNoteBox"><label for="odaiNote">その本のどこが良かった？<span class="pickup">投稿で紹介されるかも</span></label>
         <p class="why">ひとこと付きの回答は、Instagramの投稿で「フォロワーさんの声」として紹介します。短くてOKです（${ODAI_NOTE_MAX}字まで）。</p>
@@ -1360,6 +1372,8 @@ function renderResult() {
   ${S.relaxed ? `<p class="hint swap-hint relaxed">選んだ条件にすべて当てはまる本が少なかったため、条件に近い本も含めています。</p>` : ""}
   <p class="hint swap-hint">読んだことがある本は「もう読んだ」を押すと、次のおすすめに入れ替わります。</p>
   <div id="picks" style="display:grid;gap:22px">${recs.length ? recs.map(pickCard).join("") : `<p class="hint">条件に合う本を、すべて「読んだ」にしているようです。「もう一度診断する」で条件を変えてみてください。</p>`}</div>
+  <div class="ig-cta"><p>ほかにも、読んで面白かったミステリーをInstagramで紹介しています。</p>
+    <a class="ig-btn" href="${IG_URL}" target="_blank" rel="noopener" data-ig="result">${IG_ICON}<span>Instagramを見る</span></a></div>
   <section class="card screen"><div class="card-head"><span>今回の依頼内容</span><span class="num">${ymd(today)}</span></div>
     <div class="card-body">
       <div class="wish"><span class="w-h">こんな本が読みたい</span><p class="w-core">${esc(wish.core)}</p>
@@ -2173,6 +2187,8 @@ function watchBuy(root) {
   }), { threshold: 0.6 });
   root.querySelectorAll(".pickcard .buy").forEach(el => buyObs.observe(el));
 }
+// Instagramへのボタン・リンクのクリックを記録（place＝result／footer／text）
+document.addEventListener("click", e => { const a = e.target.closest && e.target.closest("[data-ig]"); if (a) send({ type: "click", kind: "instagram", book: "", title: "", place: a.dataset.ig }) });
 function send(payload) {
   ga(payload);
   if (!CONFIG.GAS_URL) return;

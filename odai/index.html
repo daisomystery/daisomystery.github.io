@@ -438,6 +438,15 @@ dialog.detail .card { max-height: calc(100vh - 48px); max-height: calc(100dvh - 
 .odai-note textarea { font: inherit; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 2px; background: var(--parch); color: var(--ink); width: 100%; resize: vertical }
 .odai-meta { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; color: var(--ink-soft) }
 .odai-meta small { font-size: 11.5px; line-height: 1.6 }
+
+/* Instagramへのボタン（2026-11-25） */
+.ig-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border: 1px solid var(--oxblood); border-radius: 999px; color: var(--oxblood); background: var(--parch); font-weight: 700; font-size: 14px; text-decoration: none; line-height: 1.3 }
+.ig-btn:hover { background: var(--oxblood); color: #fff }
+.ig-btn svg { flex: none }
+.ig-foot { margin: 0 0 14px }
+.ig-link { color: inherit; text-decoration: underline; text-underline-offset: 2px }
+.ig-cta { display: grid; gap: 10px; justify-items: start; padding: 16px 18px; background: var(--parch); color: var(--ink); border: 1px solid var(--gold); border-radius: 4px }
+.ig-cta p { margin: 0 }
 </style>
 </head>
 <body>
@@ -446,9 +455,9 @@ dialog.detail .card { max-height: calc(100vh - 48px); max-height: calc(100dvh - 
   <a class="plate" href="../" style="text-decoration:none">謎本診断</a>
   <nav class="tabs" aria-label="ページ"><a class="tab" href="../">診断</a><a class="tab" href="../#shelf">だいそうの本棚</a><a class="tab" href="./" aria-current="page">今月のお題</a><a class="tab" href="../ranking/">ランキング・賞</a></nav>
 </div></header>
-<main class="wrap" id="app"></main>
+<main class="wrap" id="app"></main><script>document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("[data-ig]");if(a&&typeof gtag==="function")try{gtag("event","book_click",{click_kind:"instagram",place:a.dataset.ig})}catch(x){}})</script>
 <div id="toast" class="toast" role="status" hidden></div>
-<footer class="foot wrap" style="margin-top:24px"><p>当サイトはAmazonのアソシエイトとして、適格販売により収入を得ています。また、楽天アフィリエイトに参加しています。購入ボタンには広告（PR）リンクを含みます。<a href="../privacy/">プライバシーと広告について</a></p></footer>
+<footer class="foot wrap" style="margin-top:24px"><p class="ig-foot"><a class="ig-btn" href="https://www.instagram.com/daiso_mysterylover/" target="_blank" rel="noopener" data-ig="odai"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg><span>Instagramでミステリーを紹介しています</span></a></p><p>当サイトはAmazonのアソシエイトとして、適格販売により収入を得ています。また、楽天アフィリエイトに参加しています。購入ボタンには広告（PR）リンクを含みます。<a href="../privacy/">プライバシーと広告について</a></p></footer>
 <style>
 .odai-count { font-size: 13px; color: var(--ink-soft) }
 .odai-count b { color: var(--oxblood); font-size: 15px }
@@ -507,7 +516,7 @@ function renderForm() {
   app.innerHTML = frame(`
     <span class="chip" style="justify-self:start">今月のお題</span>
     <h2 class="odai-title">${esc(ODAI.br || ODAI.title).replace(/\n/g, "<br>")}</h2>
-    <p class="hint">1冊だけ選んでください。集まった票は、Instagram（@daiso_mysterylover）で「フォロワーが選んだおすすめミステリー」として紹介します。</p>
+    <p class="hint">1冊だけ選んでください。集まった票は、<a class="ig-link" href="https://www.instagram.com/daiso_mysterylover/" target="_blank" rel="noopener" data-ig="text-odai">Instagram（@daiso_mysterylover）</a>で「フォロワーが選んだおすすめミステリー」として紹介します。</p>
     ${done ? `<p class="hint">この端末からは『${esc(done.t)}』で回答済みです。送り直すと、新しい回答に置き換わります。</p>` : ""}
     <ol class="slots">${slot}</ol>
     <div class="field odai-note" id="noteBox"><label for="note">その本のどこが良かった？<span class="pickup">投稿で紹介されるかも</span></label>
@@ -558,7 +567,7 @@ function renderDone() {
     <span class="chip">回答を受け付けました</span>
     <h2>ご回答ありがとうございました</h2>
     <p class="hint">あなたの1冊</p><p class="pickname">『${esc(pick.t)}』</p>
-    <p class="hint">結果は${esc(ODAI.id.slice(0, 4))}年${+ODAI.id.slice(5)}月28日ごろ、Instagram（@daiso_mysterylover）で発表します。</p>
+    <p class="hint">結果は${esc(ODAI.id.slice(0, 4))}年${+ODAI.id.slice(5)}月28日ごろ、<a class="ig-link" href="https://www.instagram.com/daiso_mysterylover/" target="_blank" rel="noopener" data-ig="text-odai">Instagram（@daiso_mysterylover）</a>で発表します。</p>
     <hr style="width:100%;border:0;border-top:1px solid var(--rule)">
     <p><b>次は、あなたにぴったりの1冊を診断で。</b><br><span class="hint">いくつかの質問に答えるだけで、だいそうの読了本から3冊を選びます。</span></p>
     <a class="btn seal" href="../${back}" style="text-decoration:none">診断をはじめる</a>
