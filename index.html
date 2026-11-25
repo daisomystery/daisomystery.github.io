@@ -124,6 +124,8 @@ a.tab { text-decoration: none; display: inline-flex; align-items: center }
 .count { display: flex; gap: 22px; flex-wrap: wrap; justify-content: center; font-size: 13px; color: var(--ink-soft) }
 .count span { display: inline-flex; align-items: baseline; gap: 4px }
 .count b { color: var(--ink); font-size: 1.3rem; font-family: var(--f-display); font-weight: 700; font-variant-numeric: lining-nums tabular-nums; line-height: 1 }
+.done-count { margin: 0; font-size: 13px; color: var(--ink-soft); text-align: center }
+.done-count b { color: var(--oxblood); font-size: 1.15rem; font-family: var(--f-display); font-weight: 700; font-variant-numeric: lining-nums tabular-nums }
 
 .btn { display: inline-flex; justify-content: center; align-items: center; gap: 8px; min-height: 48px; padding: 0 22px; border-radius: 2px;
   border: 1px solid var(--ink); background: var(--ink); color: var(--parch); font-weight: 700; cursor: pointer; text-decoration: none; letter-spacing: .04em }
@@ -1114,9 +1116,10 @@ function renderIntro() {
         <span class="sign">だいそう</span>
       </div>
       <p class="sub">いくつかの質問に答えるだけで、<br>${BOOKS.length}冊の中から<b>3冊</b>を選びます。</p>
-      <div class="count"><span>蔵書 <b>${BOOKS.length}</b> 冊</span><span>質問 <b>8</b>〜<b>9</b> 問</span><span>所要 <b>1</b> 分</span></div>
+      <div class="count"><span>蔵書 <b>${BOOKS.length}</b> 冊</span><span>質問 <b>7</b>〜<b>8</b> 問</span><span>所要 <b>1</b> 分</span></div>
       ${S.recs ? `<button class="btn ghost" id="resume" style="width:100%">前回の結果を見る</button>`
         : S.step > 0 ? `<button class="btn ghost" id="resume" style="width:100%">続きから再開する（${S.step + 1}問目）</button>` : ""}
+      <p class="done-count" id="doneCount" hidden></p>
       <div style="display:grid;gap:10px;width:100%"><button class="btn seal" id="start">${S.recs || S.step > 0 ? "最初から依頼する" : "依頼をはじめる"}</button><button class="btn ghost" id="toShelf">本棚を眺める</button></div>
     </div>
   </section>
@@ -1133,6 +1136,15 @@ function renderIntro() {
   const rb = document.getElementById("rankBox"); if (rb) rb.insertAdjacentHTML("beforebegin", listCard() + histCard(5));
   bindHist(); bindListCard();
   loadRanking();
+  loadDoneCount();
+}
+// トップの「これまでに◯回診断されました」。集計シートの回数を取りに行き、少ないうち（30回未満）や取れないときは出さない
+const DONE_MIN = 30;
+function loadDoneCount() {
+  const el = document.getElementById("doneCount"); if (!el || !CONFIG.GAS_URL) return;
+  const show = n => { if (!(n >= DONE_MIN)) return; el.innerHTML = `これまでに <b>${n.toLocaleString("ja-JP")}</b> 回 診断されました`; el.hidden = false };
+  try { const c = JSON.parse(sessionStorage.getItem("nzb_done") || "null"); if (c && Date.now() - c.t < 600000) { show(c.n); return } } catch (e) {}
+  fetch(`${CONFIG.GAS_URL}?mode=count`).then(r => r.json()).then(j => { const n = +j.count; if (!isFinite(n)) return; try { sessionStorage.setItem("nzb_done", JSON.stringify({ n, t: Date.now() })) } catch (e) {} show(n) }).catch(() => {});
 }
 
 // 質問ごとの探偵のひとこと（手がかりが集まっていく流れ）
