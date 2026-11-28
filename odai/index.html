@@ -457,10 +457,46 @@ dialog.detail .card { max-height: calc(100vh - 48px); max-height: calc(100dvh - 
   <a class="plate" href="../" style="text-decoration:none">謎本診断</a>
   <nav class="tabs" aria-label="ページ"><a class="tab" href="../">診断</a><a class="tab" href="../#shelf">だいそうの本棚</a><a class="tab" href="./" aria-current="page">今月のお題</a><a class="tab" href="../ranking/">ランキング・賞</a></nav>
 </div></header>
-<main class="wrap" id="app"></main><script>document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("[data-ig]");if(a&&typeof gtag==="function")try{gtag("event","book_click",{click_kind:"instagram",place:a.dataset.ig})}catch(x){}})</script>
+<main class="wrap" id="app"></main>
+<section class="wrap ores-wrap" id="results" hidden></section><script>document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("[data-ig]");if(a&&typeof gtag==="function")try{gtag("event","book_click",{click_kind:"instagram",place:a.dataset.ig})}catch(x){}})</script>
 <div id="toast" class="toast" role="status" hidden></div>
 <footer class="foot wrap" style="margin-top:24px"><p class="ig-foot"><a class="ig-btn" href="https://www.instagram.com/daiso_mysterylover/" target="_blank" rel="noopener" data-ig="odai"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg><span>Instagramでミステリーを紹介しています</span></a></p><p>当サイトはAmazonのアソシエイトとして、適格販売により収入を得ています。また、楽天アフィリエイトに参加しています。購入ボタンには広告（PR）リンクを含みます。<a href="../privacy/">プライバシーと広告について</a></p></footer>
 <style>
+.ores-wrap { display: grid; gap: 14px; margin-top: 28px }
+.ores-h { display: flex; align-items: baseline; gap: 10px; margin: 0; color: var(--gold-bright); font-size: 1.15rem }
+.ores-h .latin { font-size: 11px; color: var(--ink-soft) }
+.ores > summary { list-style: none; cursor: pointer }
+.ores > summary::-webkit-details-marker { display: none }
+.ores > summary::after { content: "＋"; margin-left: auto; color: var(--ink-soft) }
+.ores[open] > summary::after { content: "－" }
+.ores .card-body { display: grid; gap: 12px }
+.ores h3 { margin: 0; font-size: 1.1rem; text-wrap: balance }
+.ores-sum { margin: 0; font-size: 13px; color: var(--ink-soft) }
+.ores-sum b { color: var(--oxblood); font-size: 15px }
+.ores-top { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px }
+.ores-row { display: grid; grid-template-columns: 34px 44px 1fr; gap: 10px; align-items: center; color: inherit; text-decoration: none; padding: 6px 4px; border-bottom: 1px solid var(--rule) }
+a.ores-row:hover { background: var(--parch-deep) }
+.ores-rk { font-weight: 700; font-size: 15px; text-align: center; color: var(--ink-soft) }
+.ores-rk.g1, .ores-rk.g2, .ores-rk.g3 { color: var(--oxblood); font-size: 18px }
+.ores-cv { position: relative; width: 44px; height: 66px; background: var(--rule); border-radius: 2px; overflow: hidden }
+.ores-cv img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block }
+.ores-tx { min-width: 0; display: grid; gap: 3px }
+.ores-t { font-weight: 700; line-height: 1.35 }
+.ores-a { font-size: 12px; color: var(--ink-soft) }
+.ores-bar { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px; font-size: 12px; color: var(--ink-soft) }
+.ores-trk { height: 6px; border-radius: 3px; background: var(--rule); overflow: hidden }
+.ores-trk i { display: block; height: 100%; background: var(--gold); min-width: 4px }
+.ores-a { display: flex; justify-content: space-between; gap: 8px }
+.ores-bar b { color: var(--ink); font-size: 13px; white-space: nowrap }
+.ores-go { font-size: 11px; color: var(--oxblood); white-space: nowrap }
+.ores-sub { border-top: 1px dashed var(--rule); padding-top: 8px }
+.ores-sub > summary { cursor: pointer; font-size: 14px; font-weight: 700 }
+.ores-list { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 4px; font-size: 13px }
+.ores-list li { display: grid; grid-template-columns: 40px 1fr auto; gap: 8px }
+.ores-list a { color: inherit }
+.ores-one { margin: 8px 0 0; display: flex; flex-wrap: wrap; gap: 6px }
+.ores-one span { font-size: 12px; padding: 3px 8px; border: 1px solid var(--rule); border-radius: 999px }
+.ores-jump { font-size: 13px }
 .odai-count { font-size: 13px; color: var(--ink-soft) }
 .odai-count b { color: var(--oxblood); font-size: 15px }
 .odai-done { display: grid; gap: 12px; justify-items: start }
@@ -509,7 +545,7 @@ function countLine() { return count ? `<p class="odai-count">いま <b>${count.t
 function renderForm() {
   if (!ODAI) {
     app.innerHTML = frame(`<h2>いまはお題の受付期間ではありません</h2><p class="hint">次のお題をお楽しみに。そのあいだに、あなたにぴったりの1冊を診断で探してみませんか。</p>
-      <a class="btn seal" href="../${FROM ? "?from=" + encodeURIComponent(FROM) : ""}" style="text-decoration:none;justify-self:start">診断をはじめる</a>`);
+      <a class="btn seal" href="../${FROM ? "?from=" + encodeURIComponent(FROM) : ""}" style="text-decoration:none;justify-self:start">診断をはじめる</a>${jumpLine()}`);
     return;
   }
   const done = saved();
@@ -527,7 +563,7 @@ function renderForm() {
       <p class="nudge-msg" id="nudge" hidden>ひとこと添えると、投稿で紹介されやすくなります。もう一度「回答する」を押すと、ひとことなしで送ります。</p>
       <div class="odai-meta"><small>お名前は出しません。ネタバレになる内容は紹介しません。</small><small id="cnt"></small></div></div>
     <div class="nav"><span></span><button class="btn seal" id="send">回答する</button></div>
-    ${countLine()}`);
+    ${countLine()}${jumpLine()}`);
   const ta = document.getElementById("note"), cnt = document.getElementById("cnt");
   const paint = () => { cnt.textContent = `${ta.value.length} / ${NOTE_MAX}` }; paint();
   ta.oninput = () => { note = ta.value.slice(0, NOTE_MAX); paint() };
@@ -578,6 +614,38 @@ function renderDone() {
   window.scrollTo({ top: 0 });
 }
 
+
+// ── これまでの結果（締め切り後に確定した票数だけ。発表の投稿の時刻 show より前は出さない）
+const ODAI_RESULTS = [{"id":"2026-11","title":"一気読みが止まらなかったミステリーは？","show":"2026-11-28T19:00:00+09:00","people":198,"votes":204,"works":88,"top":[{"r":1,"t":"方舟","a":"夕木春央","v":32,"id":"b3a5a5dd4532","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/2686/9784065292686_1_3.jpg?_ex=600x600"},{"r":2,"t":"十角館の殺人","a":"綾辻行人","v":20,"id":"fbbee7bd9ead","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/8574/9784062758574_1_2.jpg?_ex=600x600"},{"r":3,"t":"硝子の塔の殺人","a":"知念実希人","v":13,"id":"b338666f66b3","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/9766/9784408559766_1_2.jpg?_ex=600x600"},{"r":4,"t":"殺戮にいたる病","a":"我孫子武丸","v":7,"id":"6211ca459754","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/7801/9784062937801_1_2.jpg?_ex=600x600"},{"r":4,"t":"すべてがFになる","a":"森博嗣","v":7,"id":"f8e54ced2b11","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/9248/9784062639248_1_23.jpg?_ex=600x600"},{"r":6,"t":"白夜行","a":"東野圭吾","v":6,"id":"12f6ed1900fc","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/rakutenkobo-ebooks/cabinet/8342/2000008388342.jpg?_ex=600x600"},{"r":7,"t":"リバース","a":"湊かなえ","v":5,"id":"a4909a7d837a","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/5869/9784062935869_1_27.jpg?_ex=600x600"},{"r":8,"t":"向日葵の咲かない夏","a":"道尾秀介","v":4,"id":"d3bed3b3c906","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/5511/9784101355511.jpg?_ex=600x600"},{"r":8,"t":"告白","a":"湊かなえ","v":4,"id":"820e3004e9c3","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/3448/9784575513448_1_4.jpg?_ex=600x600"},{"r":8,"t":"ハサミ男","a":"殊能将之","v":4,"id":"a063b7997554","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/5223/9784062735223.jpg?_ex=600x600"},{"r":8,"t":"容疑者Xの献身","a":"東野圭吾","v":4,"id":"207c53c07d0d","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/0123/9784167110123_1_35.jpg?_ex=600x600"},{"r":8,"t":"ファイア・ドーム","a":"辻村深月","v":4,"id":"","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/7696/9784093867696_1_172.jpg?_ex=600x600"}],"more":[{"r":13,"t":"爆弾","a":"呉勝浩","v":3,"id":"e84a40400995","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/3706/9784065363706_1_3.jpg?_ex=600x600"},{"r":14,"t":"N","a":"道尾秀介","v":2,"id":"dec83ca389d9","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/6586/9784087446586_1_5.jpg?_ex=600x600"},{"r":14,"t":"魍魎の匣","a":"京極夏彦","v":2,"id":"","img":""},{"r":14,"t":"探偵小石は恋しない","a":"森バジル","v":2,"id":"fc93f75a61db","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/7634/9784093867634_1_7.jpg?_ex=600x600"},{"r":14,"t":"ラザロの迷宮","a":"神永学","v":2,"id":"","img":""},{"r":14,"t":"仮面病棟","a":"知念実希人","v":2,"id":"","img":""},{"r":14,"t":"変な家","a":"雨穴","v":2,"id":"a755c716b6d2","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/9932/9784864109932_1_6.jpg?_ex=600x600"},{"r":14,"t":"白鳥とコウモリ","a":"東野圭吾","v":2,"id":"7ae3bb6db1d7","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/3700/9784344433700_1_2.jpg?_ex=600x600"},{"r":14,"t":"アヒルと鴨のコインロッカー","a":"伊坂幸太郎","v":2,"id":"f2dcbac3db73","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/rakutenkobo-ebooks/cabinet/9317/2000001719317.jpg?_ex=600x600"},{"r":14,"t":"水車館の殺人","a":"綾辻行人","v":2,"id":"bbe04a154087","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/rakutenkobo-ebooks/cabinet/6314/2000002136314.jpg?_ex=600x600"},{"r":14,"t":"葉桜の季節に君を想うということ","a":"歌野晶午","v":2,"id":"902023c2e976","img":"https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/3018/9784167733018.jpg?_ex=600x600"},{"r":14,"t":"聖母","a":"秋吉理香子","v":2,"id":"","img":""}],"one":["慟哭","ソウルケイジ","出版禁止","ゴールデンスランバー","火車","私が殺した少女","みんな邪魔","しあわせの書","依存症シリーズ","占星術殺人事件","エレファントヘッド","ストーンサークルの殺人","オリエント急行の殺人","変な家2","特捜部Q","そして誰もいなくなった","名探偵じゃなくても","マークスの山","ボーン・コレクター","噂","medium 霊媒探偵城塚翡翠","最後の皇帝と謎解きを","名探偵のいけにえ","永遠の記憶","アクロイド殺し","冷たい校舎の時は止まる","Another","本と鍵の季節","正欲","マリアビートル","オーデュボンの祈り","罪の声","「石球城」殺人事件","背の眼","正体","殺し屋の営業術","殺人鬼ヨモツイクサ","名探偵のままでいて","テロリストのパラソル","少女","マクベス","十戒","地雷グリコ","殺人事件に巻き込まれて走っている場合ではないメロス","ネタバレあり 双紋島の殺人","地球星人","Iの悲劇","悪の教典","その可能性はすでに考えた","〇〇〇〇〇〇〇〇殺人事件","心霊探偵八雲","シンデレラ城の殺人","贖罪の奏鳴曲","殺人鬼にまつわる備忘録","迷路館の殺人","火喰鳥を、喰う","名探偵のはらわた","#真相をお話しします","屍人荘の殺人","禁忌の子","暗黒館の殺人","インシテミル","ペッパーズ・ゴースト","ハウスメイド"]}];
+const RES = ODAI_RESULTS.filter(m => !m.show || Date.now() >= Date.parse(m.show));
+function resRow(x, max) {
+  const inner = `<span class="ores-rk g${x.r}">${x.r}位</span>
+    <span class="ores-cv">${x.img ? `<img alt="" loading="lazy" src="${esc(x.img)}" onerror="this.remove()">` : ""}</span>
+    <span class="ores-tx"><span class="ores-t">${esc(x.t)}</span><span class="ores-a"><span>${esc(x.a)}</span>${x.id ? `<span class="ores-go">本棚で見る ›</span>` : ""}</span>
+      <span class="ores-bar"><span class="ores-trk"><i style="width:${Math.max(4, Math.round(x.v / max * 100))}%"></i></span><b>${x.v}票</b></span></span>`;
+  return `<li>${x.id ? `<a class="ores-row" href="../#book=${esc(x.id)}" data-ores="${esc(x.id)}">${inner}</a>` : `<div class="ores-row">${inner}</div>`}</li>`;
+}
+function renderResults() {
+  const box = document.getElementById("results");
+  if (!RES.length) return;
+  box.innerHTML = `<h2 class="ores-h">これまでの結果<span class="latin">Past Results</span></h2>` + RES.map((m, i) => {
+    const y = m.id.slice(0, 4), mo = +m.id.slice(5), max = Math.max(...m.top.map(x => x.v));
+    return `<details class="card ores"${i === 0 ? " open" : ""}><summary class="card-head"><span class="latin">${y}.${String(mo).padStart(2, "0")}</span><span>${y}年${mo}月のお題</span></summary>
+      <div class="card-body">
+        <h3>${esc(((ODAI_CAL.find(c => c.id === m.id) || {}).br || m.title)).replace(/\n/g, "<br>")}</h3>
+        <p class="ores-sum">フォロワーさん <b>${m.people.toLocaleString()}</b> 人から、${m.works}作品に <b>${m.votes.toLocaleString()}</b> 票が集まりました。</p>
+        <ol class="ores-top">${m.top.map(x => resRow(x, max)).join("")}</ol>
+        ${m.more.length ? `<details class="ores-sub"><summary>${m.more[0].r}位以下（2票以上・${m.more.length}作品）</summary>
+          <ul class="ores-list">${m.more.map(x => `<li><span>${x.r}位</span><span>${x.id ? `<a href="../#book=${esc(x.id)}">『${esc(x.t)}』</a>` : `『${esc(x.t)}』`} ${esc(x.a)}</span><span>${x.v}票</span></li>`).join("")}</ul></details>` : ""}
+        ${m.one.length ? `<details class="ores-sub"><summary>各1票の${m.one.length}作品</summary><p class="ores-one">${m.one.map(t => `<span>${esc(t)}</span>`).join("")}</p></details>` : ""}
+        <p class="hint" style="margin:0">くわしい紹介は<a class="ig-link" href="https://www.instagram.com/daiso_mysterylover/" target="_blank" rel="noopener" data-ig="odai-result">Instagram（@daiso_mysterylover）</a>の${mo}月28日の投稿で。</p>
+      </div></details>`;
+  }).join("");
+  box.hidden = false;
+  box.addEventListener("click", e => { const a = e.target.closest("[data-ores]"); if (a && typeof gtag === "function") try { gtag("event", "book_click", { click_kind: "odai_result", place: a.dataset.ores }) } catch (x) {} });
+}
+const jumpLine = () => RES.length ? `<p class="ores-jump"><a class="ig-link" href="#results">${+RES[0].id.slice(5)}月のお題の結果を見る ↓</a></p>` : "";
+renderResults();
 renderForm();
 // 回答人数（順位は出さない）
 if (ODAI && GAS_URL) fetch(GAS_URL + "?mode=odai_count&id=" + encodeURIComponent(ODAI.id)).then(r => r.json()).then(d => {
