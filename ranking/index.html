@@ -608,8 +608,11 @@ function renderYear() {
   const list = E.filter(e => e.r === ST.r && e.y === ST.y).sort((a, b) => a.rk - b.rk);
   const sogo = ST.r === "bun" && ST.y <= 1982 ? `<p class="rk-note">※1977〜1982年は国内・海外の区分がない総合ランキングです。</p>` : "";
   const part = (RK.partial || []).includes(ST.r + "|" + ST.y) ? `<p class="rk-note">※この年は、一部の順位を1つの出典でしか確認できていません。</p>` : "";
+  // 発売から間もない号は、出典と本誌への案内を出す（年が明けて他のランキングが出そろったら外してよい）
+  const SRC = { "haya|2027": "出典：ミステリマガジン2027年1月号（早川書房）。各作品の解説や11位以降の順位、海外篇は本誌でご覧ください。" };
+  const src = SRC[ST.r + "|" + ST.y] ? `<p class="rk-note">※${esc(SRC[ST.r + "|" + ST.y])}</p>` : "";
   const pend = list.length && list.length < 10 ? `<p class="rk-note">※この年は${list.length}位まで掲載しています。${list.length + 1}位以降は確認でき次第追加します。</p>` : "";
-  return `${tally()}${sogo}${part}${pend}<ol class="rk-list">${list.map(e => {
+  return `${tally()}${sogo}${part}${pend}${src}<ol class="rk-list">${list.map(e => {
     const b = e.bid && DB[e.bid], mine = MY.has(e.key), also = alsoIn(e);
     return `<li class="rk-item"><div class="rk-no">${e.rk}<small>位</small></div>${cover(e)}<div class="rk-body">
       <div class="rk-title">${esc(e.t)}</div><div class="rk-author">${auBtn(e.a)}</div>
